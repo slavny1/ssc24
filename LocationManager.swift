@@ -36,9 +36,3 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         print("Location manager failed with error: \(error.localizedDescription)")
     }
 }
-
-//struct CompassView: View {
-//
-//}
-
-
