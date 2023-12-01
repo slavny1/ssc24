@@ -36,11 +36,6 @@ class MainViewModel: ObservableObject {
     }
 
     private func updateHeading(_ motion: CMDeviceMotion) {
-//        let rotation = atan2(motion.gravity.y, motion.gravity.x) - .pi
-//        let degrees = rotation * 180 / .pi
-//        self.heading = (degrees + 360).truncatingRemainder(dividingBy: 360)
-//
-//        let heading = motion.attitude.yaw * 180 / .pi
         self.heading = motion.heading
         print(heading)
     }
