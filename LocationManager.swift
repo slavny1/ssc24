@@ -29,7 +29,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        heading = newHeading.magneticHeading
+//        heading = newHeading.magneticHeading
+        heading = newHeading.trueHeading
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
