@@ -1,52 +1,45 @@
 import SwiftUI
 
-final class Point {
-    let x: Double
-    let y: Double
 
-    let latRad: Double
-    let lonRad: Double
-
-    init(x: Double, y: Double) {
-        self.x = x
-        self.y = y
-        self.latRad = x * .pi / 180
-        self.lonRad = y * .pi / 180
-    }
-}
+//let arrayOfPoints: [Point] = [
+let pointOne = Point(latitude: 40.8375713597235, longtitude: 14.302335735241893)
+let pointTwo = Point(latitude: 52.10268847827439, longtitude: 23.729019036688)
+//    Point(latitude: -52.10268847827439, longtitude: 123.729019036688),
+//    Point(latitude: 2.10268847827439, longtitude: -3.729019036688)
+//]
 
 struct ContentView: View {
 
     @ObservedObject private var viewModel = LocationManager()
 
-    let pointOne: Point = Point(x: 40.8375713597235, y: 14.302335735241893)
-    let pointTwo: Point = Point(x: 52.10268847827439, y: 23.729019036688)
-
-
     var body: some View {
-        let angle = (360 - viewModel.heading + calculateBearing(from: pointOne, to: pointTwo)).truncatingRemainder(dividingBy: 360)
+        let heading = 360 - viewModel.heading
+        //        let headingsArray: [Double] = arrayOfPoints.map { point in
+        //            calculateAdjustedAngle(heading: heading, pointOne: arrayOfPoints.first!, pointTwo: point)
+        //        }
+//        let angle =  heading + calculateBearing(from: pointOne, to: pointTwo)
+        let angle = calculateAdjustedAngle(heading: heading, pointOne: pointOne, pointTwo: pointTwo)
 
         VStack {
             Text("North: \((viewModel.heading), specifier: "%.0f") degrees")
                 .padding()
-            Text("Point: \((angle), specifier: "%.0f") degrees")
-                .padding()
+            //            Text("Point: \((angle), specifier: "%.0f") degrees")
+            //                .padding()
             ZStack {
                 Image(systemName: "location.north.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
-                    .rotationEffect(Angle(degrees: 360 - viewModel.heading))
+                    .foregroundColor(.red)
+                    .rotationEffect(.degrees(angle))
 
                 Image(systemName: "location.north.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 100, height: 100)
-                    .foregroundColor(.red)
-                    .rotationEffect(Angle(degrees: angle))
+                    .rotationEffect(Angle(degrees: heading))
+
             }
-        }.onAppear {
-            print("current angle: \(angle)")
         }
     }
 
@@ -73,8 +66,8 @@ struct ContentView: View {
     /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in radians.
     ///
     private func calculateBearing(from startPoint: Point, to endPoint: Point) -> Double {
-        let y = sin(endPoint.lonRad - startPoint.lonRad) * cos(endPoint.latRad)
-        let x = cos(startPoint.latRad) * sin(endPoint.latRad) - sin(startPoint.latRad) * cos(endPoint.latRad) * cos(endPoint.lonRad - startPoint.lonRad)
+        let y = sin(endPoint.longRad - startPoint.longRad) * cos(endPoint.latRad)
+        let x = cos(startPoint.latRad) * sin(endPoint.latRad) - sin(startPoint.latRad) * cos(endPoint.latRad) * cos(endPoint.longRad - startPoint.longRad)
         let teta = atan2(y, x)
         // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
         let angle = (teta * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
@@ -103,10 +96,16 @@ struct ContentView: View {
     ///
     private func calculateBearingTwo(from startPoint: Point, to endPoint: Point) -> Double {
         let deltaPhi = log(tan(endPoint.latRad / 2 + .pi / 4) / tan(startPoint.latRad / 2 + .pi / 4))
-        let deltaLon = abs(endPoint.lonRad - startPoint.lonRad)
+        let deltaLon = abs(endPoint.longRad - startPoint.longRad)
         let bearing = atan2(deltaLon, deltaPhi)
         // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
         let angle = (bearing * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
         return angle
+    }
+
+    private func calculateAdjustedAngle(heading: Double, pointOne: Point, pointTwo: Point) -> Double {
+        let bearing = calculateBearing(from: pointOne, to: pointTwo)
+        let adjustedAngle = heading + bearing
+        return adjustedAngle
     }
 }
