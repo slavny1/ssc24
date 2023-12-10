@@ -8,24 +8,34 @@
 import Foundation
 import SwiftUI
 
-final class Point {
+final class Point: Identifiable {
 
-    private let latitude: Double
-    private let longtitude: Double
+    var lat: Double
+    var lng: Double
 
-    var name: String = "random name"
-    var home: Bool = false
+    var name: String
 
-    lazy var latRad = makeRadians(latitude)
-    lazy var longRad = makeRadians(longtitude)
+    lazy var latRad = makeRadians(lat)
+    lazy var lngRad = makeRadians(lng)
 
-    init(latitude: Double, longtitude: Double) {
-        self.latitude = latitude
-        self.longtitude = longtitude
+    init(lat: Double, lng: Double, name: String) {
+        self.lat = lat
+        self.lng = lng
+        self.name = name
     }
 
     private func makeRadians(_ coordinate: Double) -> Double {
         return coordinate * .pi / 180
     }
 }
+
+var points = [
+    Point(lat: 52.10268847827439, lng: 23.729019036688, name: "Brest"),
+//    Point(lat: 52.10268847827439, lng: -23.729019036688, name: "Brest with neg lng"),
+//    Point(lat: -52.10268847827439, lng: 23.729019036688, name: "Brest with neg lat"),
+//    Point(lat: -52.10268847827439, lng: -23.729019036688, name: "Brest with neg coord"),
+//    Point(lat: 90, lng: 0, name: "North Pole")
+]
+
+var home = Point(lat: 40.8375713597235, lng: 14.302335735241893, name: "Naples")
 
