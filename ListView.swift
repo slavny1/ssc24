@@ -37,21 +37,21 @@ struct ListView: View {
                         Image(systemName: "pencil")
                     }
                     .foregroundColor(.black)
+                    
                 }
             }
-        }
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("Your locations")
-                    .font(.system(size: 20, weight: .semibold))
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: {
-                    list.append(Point(lat: 0, lng: 0, name: "North Pole"))
-                }, label: {
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Your locations")
+                        .font(.system(size: 20, weight: .semibold))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        AddNewLocationView()
+                    } label: {
                         Image(systemName: "plus")
-                    .foregroundColor(.black)
-                })
+                    }
+                }
             }
         }
     }
@@ -60,31 +60,100 @@ struct ListView: View {
 struct EditLocationView: View {
     
     @Binding var point: Point
+    @Environment(\.presentationMode) var presentationMode
     
     @State var name: String = ""
     @State var lat: String = ""
     @State var lng: String = ""
     
     var body: some View {
-        VStack {
-            Text(point.name)
-            Text("\(point.lat)")
-            Text("\(point.lng)")
-            TextField(text: $name) {
-                Text("Point name")
+        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 20) {
+            HStack {
+                Text("Name:")
+                TextField("Input point's name", text: $name)
+                    .textFieldStyle(.roundedBorder)
             }
-            TextField(text: $lat) {
-                Text("Input latitude")
+            HStack {
+                Text("Lat:")
+                TextField("Input latitude", text: $lat)
+                    .textFieldStyle(.roundedBorder)
             }
-            TextField(text: $lng) {
-                Text("Input longtitude")
+            HStack {
+                Text("Lng:")
+                TextField("Input longtitude", text: $lng)
+                    .textFieldStyle(.roundedBorder)
+            }
+        }
+        .padding(.horizontal)
+        .onAppear() {
+            name = point.name
+            lat = String(format: "%0.4f", point.lat)
+            lng = String(format: "%0.4f", point.lng)
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(point.name)
+                    .fontWeight(.semibold)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                    // implement logit for editing point's data
+                    
+                }, label: {
+                    Text("Save")
+                })
             }
         }
     }
 }
 
-extension TextField {
+struct AddNewLocationView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+    
+    @State var name: String = ""
+    @State var lat: String = ""
+    @State var lng: String = ""
+//    @State var isHome: Bool = false
+    
+    var body: some View {
+        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 20) {
+            HStack {
+                Text("Name:")
+                TextField("Input point's name", text: $name)
+                    .textFieldStyle(.roundedBorder)
+            }
+            HStack {
+                Text("Lat:")
+                TextField("Input latitude", text: $lat)
+                    .textFieldStyle(.roundedBorder)
+            }
+            HStack {
+                Text("Lng:")
+                TextField("Input longtitude", text: $lng)
+                    .textFieldStyle(.roundedBorder)
+            }
+//            Toggle(isOn: $isHome, label: {
+//                Text("Set up as a home location")
+//            })
+        }
+        .padding(.horizontal)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Add new location")
+                    .fontWeight(.semibold)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    points.append(Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name))
+                    self.presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Text("Save")
+                })
+            }
+        }
+    }
 }
 
 #Preview {
@@ -95,5 +164,10 @@ extension TextField {
 #Preview {
     NavigationStack {
         EditLocationView(point: .constant(points[0]))
+    }
+}
+#Preview {
+    NavigationStack {
+        AddNewLocationView()
     }
 }
