@@ -15,7 +15,6 @@ struct ListView: View {
     var body: some View {
         List {
             Section {
-                
                 NavigationLink {
                     EditLocationView(point: $home)
                 } label: {
@@ -28,7 +27,6 @@ struct ListView: View {
                     .foregroundColor(.black)
                 }
             }
-            
             ForEach ($list) { $point in
                 NavigationLink {
                     EditLocationView(point: $point)
@@ -41,14 +39,12 @@ struct ListView: View {
                     .foregroundColor(.black)
                 }
             }
-            
-            
         }
         .toolbar {
-//            ToolbarItem(placement: .automatic) {
-//                Text("Your locations")
-//                    .font(.system(size: 20, weight: .semibold))
-//            }
+            ToolbarItem(placement: .principal) {
+                Text("Your locations")
+                    .font(.system(size: 20, weight: .semibold))
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
                     list.append(Point(lat: 0, lng: 0, name: "North Pole"))
@@ -65,17 +61,39 @@ struct EditLocationView: View {
     
     @Binding var point: Point
     
+    @State var name: String = ""
+    @State var lat: String = ""
+    @State var lng: String = ""
+    
     var body: some View {
         VStack {
             Text(point.name)
             Text("\(point.lat)")
             Text("\(point.lng)")
+            TextField(text: $name) {
+                Text("Point name")
+            }
+            TextField(text: $lat) {
+                Text("Input latitude")
+            }
+            TextField(text: $lng) {
+                Text("Input longtitude")
+            }
         }
     }
+}
+
+extension TextField {
+    
 }
 
 #Preview {
     NavigationStack {
         ListView(list: points, home: home)
+    }
+}
+#Preview {
+    NavigationStack {
+        EditLocationView(point: .constant(points[0]))
     }
 }

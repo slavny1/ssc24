@@ -41,6 +41,7 @@ struct ContentView: View {
                     ListView(list: points, home: home)
                 } label: {
                     Image(systemName: "list.star")
+                        .foregroundColor(.black)
                 }
             }
         })
