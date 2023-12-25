@@ -7,10 +7,13 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
 
     @ObservedObject private var viewModel = LocationManager()
+    @Environment(\.modelContext) private var context
+    @Query(sort: \Point.name, order: .forward) var points: [Point]
 
     var body: some View {
         let heading = 360 - viewModel.heading

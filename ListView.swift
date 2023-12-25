@@ -40,17 +40,18 @@ struct ListView: View {
                     
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Your locations")
-                        .font(.system(size: 20, weight: .semibold))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        AddNewLocationView()
-                    } label: {
-                        Image(systemName: "plus")
-                    }
+           
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Your locations")
+                    .font(.system(size: 20, weight: .semibold))
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    AddNewLocationView()
+                } label: {
+                    Image(systemName: "plus")
                 }
             }
         }
@@ -111,6 +112,7 @@ struct EditLocationView: View {
 struct AddNewLocationView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.modelContext) private var context
     
     @State var name: String = ""
     @State var lat: String = ""
@@ -145,8 +147,10 @@ struct AddNewLocationView: View {
                     .fontWeight(.semibold)
             }
             ToolbarItem(placement: .topBarTrailing) {
+                let point = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name)
                 Button(action: {
-                    points.append(Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name))
+//                    points.append(Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name))
+                    context.insert(point)
                     self.presentationMode.wrappedValue.dismiss()
                 }, label: {
                     Text("Save")
@@ -156,16 +160,16 @@ struct AddNewLocationView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        ListView(list: points, home: home)
-    }
-}
-#Preview {
-    NavigationStack {
-        EditLocationView(point: .constant(points[0]))
-    }
-}
+//#Preview {
+//    NavigationStack {
+//        ListView(list: points, home: home)
+//    }
+//}
+//#Preview {
+//    NavigationStack {
+//        EditLocationView(point: .constant(points[0]))
+//    }
+//}
 #Preview {
     NavigationStack {
         AddNewLocationView()
