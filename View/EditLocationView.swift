@@ -16,7 +16,7 @@ struct EditLocationView: View {
     @State var lat: String = ""
     @State var lng: String = ""
     
-    var point: Point
+    var point: Point?
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 20) {
@@ -35,32 +35,42 @@ struct EditLocationView: View {
                 TextField("Input longtitude", text: $lng)
                     .textFieldStyle(.roundedBorder)
             }
-            Button {
-                self.presentationMode.wrappedValue.dismiss()
-                context.delete(point)
-            } label: {
-                Text("Delete")
+            if let point = point {
+                Button {
+                    self.presentationMode.wrappedValue.dismiss()
+                    context.delete(point)
+                } label: {
+                    Text("Delete")
+                }
             }
-            
         }
         .padding(.horizontal)
         .onAppear() {
-            name = point.name
-            lat = String(format: "%0.4f", point.lat)
-            lng = String(format: "%0.4f", point.lng)
+            if let point = point {
+                name = point.name
+                lat = String(format: "%0.4f", point.lat)
+                lng = String(format: "%0.4f", point.lng)
+            }
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(point.name)
-                    .fontWeight(.semibold)
+                if let point = point {
+                    Text(point.name)
+                        .fontWeight(.semibold)
+                } else {
+                    Text("Add new location")
+                        .fontWeight(.semibold)
+                }
+                
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
                     let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name)
                     context.insert(newPoint)
-                    context.delete(point)
-                    
+                    if let point = point {
+                        context.delete(point)
+                    }
                 }, label: {
                     Text("Save")
                 })

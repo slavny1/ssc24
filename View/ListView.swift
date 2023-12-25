@@ -48,7 +48,7 @@ struct ListView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
-                    AddNewLocationView()
+                    EditLocationView()
                 } label: {
                     Image(systemName: "plus")
                 }
