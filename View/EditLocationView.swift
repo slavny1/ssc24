@@ -28,7 +28,6 @@ struct EditLocationView: View {
                 Text("Lat:")
                 CustomTextField("Input latitude", text: $lat)
                     .numericOnly(input: $lat)
-//                    .keyboardType(.numberPad)
             }
             HStack {
                 Text("Lng:")
