@@ -23,17 +23,17 @@ struct EditLocationView: View {
             HStack {
                 Text("Name:")
                 CustomTextField("Input point's name", text: $name)
-                    .textFieldStyle(.roundedBorder)
             }
             HStack {
                 Text("Lat:")
                 CustomTextField("Input latitude", text: $lat)
-                    .textFieldStyle(.roundedBorder)
+                    .numericOnly(input: $lat)
+//                    .keyboardType(.numberPad)
             }
             HStack {
                 Text("Lng:")
                 CustomTextField("Input longtitude", text: $lng)
-                    .textFieldStyle(.roundedBorder)
+                    .numericOnly(input: $lat)
             }
             if let point = point {
                 Button {
