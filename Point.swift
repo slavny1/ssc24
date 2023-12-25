@@ -9,24 +9,18 @@ import Foundation
 import SwiftUI
 import SwiftData
 
+@Model
 final class Point: Identifiable {
-
+    
+    @Attribute (.unique) var name: String
+    
     var lat: Double
     var lng: Double
-
-    var name: String
-
-    lazy var latRad = makeRadians(lat)
-    lazy var lngRad = makeRadians(lng)
 
     init(lat: Double, lng: Double, name: String) {
         self.lat = lat
         self.lng = lng
         self.name = name
-    }
-
-    private func makeRadians(_ coordinate: Double) -> Double {
-        return coordinate * .pi / 180
     }
 }
 

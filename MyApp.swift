@@ -16,5 +16,6 @@ struct MyApp: App {
                     .navigationTitle("Bussola mi")
             }
         }
+        .modelContainer(for: [Point.self])
     }
 }

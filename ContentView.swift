@@ -67,15 +67,26 @@ struct ContentView: View {
     /// - Note: The formula used for calculating the bearing is based on the Haversine formula.
     /// - SeeAlso: `haversineFormula`
     ///
-    /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in radians.
+    /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in degrees.
     ///
     private func calculateBearing(from startPoint: Point, to endPoint: Point) -> Double {
-        let y = sin(endPoint.lngRad - startPoint.lngRad) * cos(endPoint.latRad)
-        let x = cos(startPoint.latRad) * sin(endPoint.latRad) - sin(startPoint.latRad) * cos(endPoint.latRad) * cos(endPoint.lngRad - startPoint.lngRad)
+        
+        let endLngRad = makeRadians(endPoint.lng)
+        let endLatRad = makeRadians(endPoint.lat)
+        
+        let startLngRad = makeRadians(startPoint.lng)
+        let startLatRad = makeRadians(startPoint.lat)
+        
+        let y = sin(endLngRad - startLngRad) * cos(endLatRad)
+        let x = cos(startLatRad) * sin(endLatRad) - sin(startLatRad) * cos(endLatRad) * cos(endLngRad - startLngRad)
         let teta = atan2(y, x)
         // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
         let angle = (teta * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
         return angle
+    }
+    
+    private func makeRadians(_ coordinate: Double) -> Double {
+        return coordinate * .pi / 180
     }
 
     /// Calculates the bearing (angle) between two geographical points using an alternative method with logariphmic approach.
@@ -96,11 +107,18 @@ struct ContentView: View {
     /// - Note: This method uses an alternative approach to calculate bearing based on logarithmic and absolute differences of latitude and longitude.
     /// - SeeAlso: `logarithmicBearingFormula`
     ///
-    /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in radians.
+    /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in degrees.
     ///
     private func calculateBearingTwo(from startPoint: Point, to endPoint: Point) -> Double {
-        let deltaPhi = log(tan(endPoint.latRad / 2 + .pi / 4) / tan(startPoint.latRad / 2 + .pi / 4))
-        let deltaLon = abs(endPoint.lngRad - startPoint.lngRad)
+        
+        let endLngRad = makeRadians(endPoint.lng)
+        let endLatRad = makeRadians(endPoint.lat)
+        
+        let startLngRad = makeRadians(startPoint.lng)
+        let startLatRad = makeRadians(startPoint.lat)
+        
+        let deltaPhi = log(tan(endLatRad / 2 + .pi / 4) / tan(startLatRad / 2 + .pi / 4))
+        let deltaLon = abs(endLngRad - startLngRad)
         let bearing = atan2(deltaLon, deltaPhi)
         // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
         let angle = (bearing * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
