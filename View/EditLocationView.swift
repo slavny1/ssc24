@@ -22,17 +22,17 @@ struct EditLocationView: View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 20) {
             HStack {
                 Text("Name:")
-                TextField("Input point's name", text: $name)
+                CustomTextField("Input point's name", text: $name)
                     .textFieldStyle(.roundedBorder)
             }
             HStack {
                 Text("Lat:")
-                TextField("Input latitude", text: $lat)
+                CustomTextField("Input latitude", text: $lat)
                     .textFieldStyle(.roundedBorder)
             }
             HStack {
                 Text("Lng:")
-                TextField("Input longtitude", text: $lng)
+                CustomTextField("Input longtitude", text: $lng)
                     .textFieldStyle(.roundedBorder)
             }
             if let point = point {
