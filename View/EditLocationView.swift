@@ -41,7 +41,7 @@ struct EditLocationView: View {
             } label: {
                 Text("Delete")
             }
-
+            
         }
         .padding(.horizontal)
         .onAppear() {
@@ -57,7 +57,10 @@ struct EditLocationView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
-                    context.insert(point)
+                    let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name)
+                    context.insert(newPoint)
+                    context.delete(point)
+                    
                 }, label: {
                     Text("Save")
                 })

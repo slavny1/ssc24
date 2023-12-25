@@ -87,10 +87,6 @@ struct ContentView: View {
         let angle = (teta * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
         return angle
     }
-    
-    private func makeRadians(_ coordinate: Double) -> Double {
-        return coordinate * .pi / 180
-    }
 
     /// Calculates the bearing (angle) between two geographical points using an alternative method with logariphmic approach.
     ///
@@ -126,6 +122,10 @@ struct ContentView: View {
         // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
         let angle = (bearing * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
         return angle
+    }
+    
+    private func makeRadians(_ coordinate: Double) -> Double {
+        return coordinate * .pi / 180
     }
 
     private func calculateAdjustedAngle(heading: Double, pointOne: Point, pointTwo: Point) -> Double {
