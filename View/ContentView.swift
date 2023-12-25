@@ -41,7 +41,7 @@ struct ContentView: View {
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
-                    ListView(list: points, home: home)
+                    ListView()
                 } label: {
                     Image(systemName: "list.star")
                         .foregroundColor(.black)
