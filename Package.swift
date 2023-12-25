@@ -10,7 +10,7 @@ import AppleProductTypes
 let package = Package(
     name: "SwiftStudentChallenge",
     platforms: [
-        .iOS("16.0")
+        .iOS("17.0")
     ],
     products: [
         .iOSApplication(
@@ -20,8 +20,8 @@ let package = Package(
             teamIdentifier: "3523U23689",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .coins),
-            accentColor: .presetColor(.mint),
+            appIcon: .placeholder(icon: .location),
+            accentColor: .presetColor(.purple),
             supportedDeviceFamilies: [
                 .pad,
                 .phone
