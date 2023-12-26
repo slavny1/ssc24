@@ -11,12 +11,12 @@ import SwiftData
 
 struct ContentView: View {
 
-    @ObservedObject private var viewModel = LocationManager()
+    @ObservedObject private var viewModel = MainViewModel()
     @Environment(\.modelContext) private var context
     @Query(sort: \Point.name, order: .forward) var points: [Point]
 
     var body: some View {
-        let heading = 360 - viewModel.heading
+        let heading = 360 - viewModel.north
         VStack {
 //            Text("North: \((viewModel.heading), specifier: "%.0f") degrees")
 //                .padding()
@@ -31,7 +31,7 @@ struct ContentView: View {
                     .rotationEffect(Angle(degrees: heading))
                 
                 ForEach(points) { point in
-                    let angle = calculateAdjustedAngle(heading: heading, pointOne: home, pointTwo: point)
+                    let angle = viewModel.calculateAdjustedAngle(heading: heading, pointOne: home, pointTwo: point)
                     Image(systemName: "location.north.fill")
                         .resizable()
                         .scaledToFit()
