@@ -18,14 +18,16 @@ struct ContentView: View {
     var body: some View {
         let heading = 360 - viewModel.heading
         VStack {
-            Text("North: \((viewModel.heading), specifier: "%.0f") degrees")
-                .padding()
+//            Text("North: \((viewModel.heading), specifier: "%.0f") degrees")
+//                .padding()
             ZStack {
-                Image(systemName: "location.north.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100, height: 100)
-                    .foregroundColor(.red)
+//                Image(systemName: "location.north.fill")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 100, height: 100)
+//                    .foregroundColor(.red)
+//                    .rotationEffect(Angle(degrees: heading))
+                CircleView()
                     .rotationEffect(Angle(degrees: heading))
                 
                 ForEach(points) { point in
@@ -44,7 +46,6 @@ struct ContentView: View {
                     ListView()
                 } label: {
                     Image(systemName: "list.star")
-                        .foregroundColor(.black)
                 }
             }
         })
