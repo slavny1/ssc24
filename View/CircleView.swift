@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CircleView: View {
+    @State var heading: Double
+    @State var north: Double
     
     let width = UIScreen.main.bounds.width
     
@@ -46,13 +49,21 @@ struct CircleView: View {
                         .offset(y: (width - 50) / 2)
                         .rotationEffect(.init(degrees: Double(dot) * 2))
                 }
+//                if anglesArray.contains(dot) || anglesArray.contains(dot + 1) {
+//                    Rectangle()
+//                        .foregroundStyle(Color.red)
+//                        .frame(width: 2, height: 15)
+//                        .offset(y: (width - 110) / 2)
+//                        .rotationEffect(.init(degrees: Double(dot) * 2))
+//                }
             }
             Circle()
                 .frame(width: 5)
         }
     }
+    
 }
 
 #Preview {
-    CircleView()
+    CircleView(heading: 0, north: 0)
 }
