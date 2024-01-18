@@ -9,32 +9,43 @@ import SwiftUI
 import SwiftData
 
 struct CircleView: View {
-    @State var heading: Double
-    @State var north: Double
-    
+    @Binding var north: Double
+
     let width = UIScreen.main.bounds.width
-    
+
     var body: some View {
         ZStack {
             ForEach(0..<180) { dot in
                 if dot == 90 {
-                    Text("N")
-                        .offset(y: (width - 170) / 2)
-                        .rotationEffect(.init(degrees: Double(dot) * 2))
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.red)
+                    HStack {
+                        Text("N")
+                            .rotationEffect(.init(degrees: 180 - north))
+                    }
+                    .offset(y: (width - 170) / 2)
+                    .rotationEffect(.init(degrees: Double(dot) * 2))
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(.red)
                 } else if dot == 0 {
-                    Text("S")
+                    HStack {
+                        Text("S")
+                            .rotationEffect(.init(degrees: -north))
+                    }
                         .offset(y: (width - 170) / 2)
                         .rotationEffect(.init(degrees: Double(dot) * 2))
                         .font(.system(size: 24, weight: .semibold))
                 } else if dot == 45 {
-                    Text("W")
+                    HStack {
+                        Text("W")
+                            .rotationEffect(.init(degrees: 270 - north))
+                    }
                         .offset(y: (width - 170) / 2)
                         .rotationEffect(.init(degrees: Double(dot) * 2))
                         .font(.system(size: 24, weight: .semibold))
                 } else if dot == 135 {
-                    Text("E")
+                    HStack {
+                        Text("E")
+                            .rotationEffect(.init(degrees: 90 - north))
+                    }
                         .offset(y: (width - 170) / 2)
                         .rotationEffect(.init(degrees: Double(dot) * 2))
                         .font(.system(size: 24, weight: .semibold))
@@ -45,25 +56,24 @@ struct CircleView: View {
                     .offset(y: (width - 110) / 2)
                     .rotationEffect(.init(degrees: Double(dot) * 2))
                 if dot % 15 == 0 {
-                    Text("\(dot >= 90 ? abs(180 - dot * 2) : abs(180 + dot * 2))")
-                        .offset(y: (width - 50) / 2)
-                        .rotationEffect(.init(degrees: Double(dot) * 2))
+                    HStack {
+                        Text("\(360 - dot * 2)")
+                            .rotationEffect(.init(degrees: 360 - Double(dot) * 2 - north))
+                    }
+                    .offset(y: (width - 50) / 2)
+                    .rotationEffect(.init(degrees: Double(dot) * 2))
                 }
-//                if anglesArray.contains(dot) || anglesArray.contains(dot + 1) {
-//                    Rectangle()
-//                        .foregroundStyle(Color.red)
-//                        .frame(width: 2, height: 15)
-//                        .offset(y: (width - 110) / 2)
-//                        .rotationEffect(.init(degrees: Double(dot) * 2))
-//                }
+                //                if anglesArray.contains(dot) || anglesArray.contains(dot + 1) {
+                //                    Rectangle()
+                //                        .foregroundStyle(Color.red)
+                //                        .frame(width: 2, height: 15)
+                //                        .offset(y: (width - 110) / 2)
+                //                        .rotationEffect(.init(degrees: Double(dot) * 2))
+                //                }
             }
             Circle()
                 .frame(width: 5)
         }
     }
-    
-}
 
-#Preview {
-    CircleView(heading: 0, north: 0)
 }

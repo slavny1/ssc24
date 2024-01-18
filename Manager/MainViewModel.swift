@@ -33,25 +33,14 @@ class MainViewModel: ObservableObject {
     private func startUpdateMotionData() {
         motionManager.startUpdates { [weak self] motion, error in
             guard let motion = motion, error == nil else { return }
-//            let motionData = MotionDataModel(
-//                pitch: motion.attitude.pitch,
-//                roll: motion.attitude.roll,
-//                yaw: motion.attitude.yaw
-//            )
-//            self?.heading = motion.attitude.yaw * 360 / .pi
-            self?.updateHeading(motion)
-//            print(heading)
+
+            let rotation = atan2(motion.gravity.x, motion.gravity.y) - .pi
+            self?.heading = rotation * 180.0 / .pi
         }
     }
     
     private func updateHeading(_ motion: CMDeviceMotion) {
-//        self.heading = motion.attitude.roll
         self.heading = atan2(motion.userAcceleration.x, motion.userAcceleration.y) - .pi
-//        self.heading = motion.heading
-//        print(heading)
-//        print("yaw: \(motion.rotationRate.x * 360 / .pi)")
-//        print("pitch: \(motion.rotationRate.y * 360 / .pi)")
-//        print("roll: \(motion.rotationRate.z * 360 / .pi)")
     }
     
     deinit {

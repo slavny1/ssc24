@@ -23,8 +23,7 @@ struct ContentView: View {
             //                .padding()
             ZStack {
                 CircleView(
-                    heading: viewModel.heading,
-                    north: viewModel.north
+                    north: $viewModel.north
                 )
                 .rotationEffect(Angle(degrees: viewModel.north))
                 
