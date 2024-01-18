@@ -25,7 +25,7 @@ struct ListView: View {
                         Spacer()
                         Image(systemName: "pencil")
                     }
-                    .foregroundColor(.black)
+//                    .foregroundColor(.black)
                 }
             }
             ForEach (points) { point in
@@ -37,7 +37,7 @@ struct ListView: View {
                         Spacer()
                         Image(systemName: "pencil")
                     }
-                    .foregroundColor(.black)
+//                    .foregroundColor(.black)
                 }
             }
         }

@@ -5,16 +5,17 @@
 //  Created by Viacheslav on 21/11/23.
 //
 
-import SwiftUI
 import CoreLocation
+import Combine
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+class LocationManager: NSObject, CLLocationManagerDelegate {
 
-    @Published var heading: CLLocationDirection = 0.0
+    var heading: PassthroughSubject<Double, Never>
 
     private var locationManager = CLLocationManager()
 
     override init() {
+        heading = .init()
         super.init()
         setupLocationManager()
     }
@@ -54,8 +55,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     ///
     /// - Warning: The `newHeading` parameter should not be `nil`, and the `heading` property is updated with the true heading information.
     ///
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        heading = newHeading.trueHeading
+    internal func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading.send(360 - newHeading.trueHeading)
     }
 
     /// Notifies the delegate that the location manager was unable to retrieve the user's location due to an error.
