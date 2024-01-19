@@ -15,6 +15,7 @@ struct EditLocationView: View {
     @State var name: String = ""
     @State var lat: String = ""
     @State var lng: String = ""
+    @State var home: Bool = false
     
     var point: Point?
     
@@ -34,6 +35,11 @@ struct EditLocationView: View {
                 CustomTextField("Input longtitude", text: $lng)
                     .numericOnly(input: $lat)
             }
+            Button(action: {
+                home.toggle()
+            }, label: {
+                Text("Set as home")
+            })
             if let point = point {
                 Button {
                     self.presentationMode.wrappedValue.dismiss()
@@ -49,6 +55,7 @@ struct EditLocationView: View {
                 name = point.name
                 lat = String(format: "%0.4f", point.lat)
                 lng = String(format: "%0.4f", point.lng)
+                home = point.home
             }
         }
         .toolbar {
@@ -65,7 +72,7 @@ struct EditLocationView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
                     self.presentationMode.wrappedValue.dismiss()
-                    let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name)
+                    let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: home)
                     context.insert(newPoint)
                     if let point = point {
                         context.delete(point)
@@ -78,6 +85,6 @@ struct EditLocationView: View {
     }
 }
 
-#Preview {
-    EditLocationView(point: home)
-}
+//#Preview {
+//    EditLocationView(point: home)
+//}

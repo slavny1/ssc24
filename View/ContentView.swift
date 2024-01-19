@@ -15,7 +15,9 @@ struct ContentView: View {
     
     @Environment(\.modelContext) private var context
     @Query(sort: \Point.name, order: .forward) var points: [Point]
-    @State var anglesArray: [Int] = []
+    var home: Point? {
+        points.first(where: { $0.home == true })
+    }
     
     var body: some View {
         VStack {
@@ -28,15 +30,17 @@ struct ContentView: View {
                 .rotationEffect(Angle(degrees: viewModel.north))
                 
                 ForEach(points) { point in
-                    let angle = viewModel.calculateAdjustedAngle(
-                        pointOne: home,
-                        pointTwo: point
-                    )
-                    Image(systemName: "location.north.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .rotationEffect(.degrees(angle))
+                    if let home = home, point.home == false {
+                        let angle = viewModel.calculateAdjustedAngle(
+                            pointOne: home,
+                            pointTwo: point
+                        )
+                        Image(systemName: "location.north.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .rotationEffect(.degrees(angle))
+                    }
                 }
             }
         }
@@ -49,9 +53,15 @@ struct ContentView: View {
                 }
             }
         })
-        .onAppear() {
-            anglesArray = points.map {              Int(viewModel.calculateAdjustedAngle(pointOne: home, pointTwo: $0)) }
-            print(anglesArray)
-        }
+//        .onAppear() {
+//            if let home = points.first(where: { $0.home == true }) {
+//                anglesArray = points.map {
+//                    return Int(viewModel.calculateAdjustedAngle(
+//                        pointOne: home,
+//                        pointTwo: $0))
+//                }
+//            }
+//            print(anglesArray)
+//        }
     }
 }

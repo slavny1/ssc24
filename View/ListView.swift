@@ -16,28 +16,17 @@ struct ListView: View {
     var body: some View {
         List {
             Section {
-                NavigationLink {
-                    EditLocationView(point: home)
-                } label: {
-                    HStack {
-                        Image(systemName: "house")
-                        Text(home.name)
-                        Spacer()
-                        Image(systemName: "pencil")
+                ForEach (points) { point in
+                    NavigationLink {
+                        EditLocationView(point: point)
+                    } label: {
+                        HStack {
+                            if point.home { Image(systemName: "house")}
+                            Text(point.name)
+                            Spacer()
+                            Image(systemName: "pencil")
+                        }
                     }
-//                    .foregroundColor(.black)
-                }
-            }
-            ForEach (points) { point in
-                NavigationLink {
-                    EditLocationView(point: point)
-                } label: {
-                    HStack {
-                        Text(point.name)
-                        Spacer()
-                        Image(systemName: "pencil")
-                    }
-//                    .foregroundColor(.black)
                 }
             }
         }
@@ -57,8 +46,9 @@ struct ListView: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        ListView()
-    }
-}
+
+//#Preview {
+//    NavigationStack {
+//        ListView()
+//    }
+//}

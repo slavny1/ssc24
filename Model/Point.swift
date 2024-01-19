@@ -16,12 +16,21 @@ final class Point: Identifiable {
     
     var lat: Double
     var lng: Double
+    
+    var home: Bool
 
-    init(lat: Double, lng: Double, name: String) {
+    init(lat: Double, lng: Double, name: String, home: Bool) {
         self.lat = lat
         self.lng = lng
         self.name = name
+        self.home = home
     }
+    static func predicate() -> Predicate<Point> {
+        return #Predicate<Point> { point in
+            point.home == false
+        }
+    }
+
 }
 
-var home = Point(lat: 40.8375713597235, lng: 14.302335735241893, name: "Naples")
+//var home = Point(lat: 40.8375713597235, lng: 14.302335735241893, name: "Naples")
