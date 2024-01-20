@@ -25,12 +25,6 @@ final class Point: Identifiable {
         self.name = name
         self.home = home
     }
-    static func predicate() -> Predicate<Point> {
-        return #Predicate<Point> { point in
-            point.home == false
-        }
-    }
-
 }
 
 //var home = Point(lat: 40.8375713597235, lng: 14.302335735241893, name: "Naples")

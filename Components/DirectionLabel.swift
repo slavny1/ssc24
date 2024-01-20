@@ -18,8 +18,8 @@ struct DirectionLabel: View {
             Text(text)
                 .rotationEffect(.init(degrees: rotation))
         }
-        .offset(y: (width - 170) / 2)
-        .rotationEffect(.init(degrees: dot * 2))
+        .offset(y: (width - 65) / 2)
+        .rotationEffect(.init(degrees: dot))
         .font(.system(size: 24, weight: .semibold))
     }
 }

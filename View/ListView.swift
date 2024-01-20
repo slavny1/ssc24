@@ -15,17 +15,15 @@ struct ListView: View {
     
     var body: some View {
         List {
-            Section {
-                ForEach (points) { point in
-                    NavigationLink {
-                        EditLocationView(point: point)
-                    } label: {
-                        HStack {
-                            if point.home { Image(systemName: "house")}
-                            Text(point.name)
-                            Spacer()
-                            Image(systemName: "pencil")
-                        }
+            ForEach (points) { point in
+                NavigationLink {
+                    EditLocationView(point: point)
+                } label: {
+                    HStack {
+                        if point.home { Image(systemName: "house") }
+                        Text(point.name)
+                        Spacer()
+                        Image(systemName: "pencil")
                     }
                 }
             }

@@ -12,37 +12,21 @@ import SwiftData
 struct ContentView: View {
     
     @ObservedObject private var viewModel = MainViewModel()
+    @State var anglesArray: [Int] = []
     
     @Environment(\.modelContext) private var context
     @Query(sort: \Point.name, order: .forward) var points: [Point]
+    
     var home: Point? {
         points.first(where: { $0.home == true })
     }
     
     var body: some View {
-        VStack {
-            //            Text("North: \((viewModel.heading), specifier: "%.0f") degrees")
-            //                .padding()
-            ZStack {
-                CircleView(
-                    north: $viewModel.north
-                )
-                .rotationEffect(Angle(degrees: viewModel.north))
-                
-                ForEach(points) { point in
-                    if let home = home, point.home == false {
-                        let angle = viewModel.calculateAdjustedAngle(
-                            pointOne: home,
-                            pointTwo: point
-                        )
-                        Image(systemName: "location.north.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100, height: 100)
-                            .rotationEffect(.degrees(angle))
-                    }
-                }
-            }
+        ZStack {
+            CircleView(
+                north: $viewModel.north, anglesArray: anglesArray
+            )
+            .rotationEffect(Angle(degrees: viewModel.north))
         }
         .toolbar(content: {
             ToolbarItem(placement: .topBarTrailing) {
@@ -53,15 +37,17 @@ struct ContentView: View {
                 }
             }
         })
-//        .onAppear() {
-//            if let home = points.first(where: { $0.home == true }) {
-//                anglesArray = points.map {
-//                    return Int(viewModel.calculateAdjustedAngle(
-//                        pointOne: home,
-//                        pointTwo: $0))
-//                }
-//            }
-//            print(anglesArray)
-//        }
+        .onAppear() {
+            if let home = points.first(where: { $0.home }) {
+                anglesArray = points
+                    .filter{ !$0.home }
+                    .map {
+                        Int(viewModel.calculateAdjustedAngle(
+                            pointOne: home,
+                            pointTwo: $0)
+                        )
+                    }
+            }
+        }
     }
 }

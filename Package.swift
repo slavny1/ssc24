@@ -18,10 +18,10 @@ let package = Package(
             targets: ["AppModule"],
             bundleIdentifier: "slavny1.SwiftStudentChallenge",
             teamIdentifier: "3523U23689",
-            displayVersion: "1.0",
+            displayVersion: "1.1",
             bundleVersion: "1",
             appIcon: .placeholder(icon: .location),
-            accentColor: .presetColor(.purple),
+            accentColor: .presetColor(.indigo),
             supportedDeviceFamilies: [
                 .pad,
                 .phone
