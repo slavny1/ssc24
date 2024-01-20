@@ -43,10 +43,3 @@ struct ListView: View {
         }
     }
 }
-
-
-//#Preview {
-//    NavigationStack {
-//        ListView()
-//    }
-//}

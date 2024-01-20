@@ -84,7 +84,3 @@ struct EditLocationView: View {
         }
     }
 }
-
-//#Preview {
-//    EditLocationView(point: home)
-//}

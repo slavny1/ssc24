@@ -26,5 +26,3 @@ final class Point: Identifiable {
         self.home = home
     }
 }
-
-//var home = Point(lat: 40.8375713597235, lng: 14.302335735241893, name: "Naples")

@@ -11,16 +11,13 @@ import Combine
 
 class MainViewModel: ObservableObject {
     
-    @Published var heading: Double = 0
     @Published var north: Double = 0
     
-    private let motionManager = MotionManager()
     private let locationManager = LocationManager()
     
     private var disposeBag: Set<AnyCancellable> = []
     
     init() {
-        startUpdateMotionData()
         locationManager
             .heading
             .sink { [weak self] north in
@@ -28,24 +25,6 @@ class MainViewModel: ObservableObject {
                 self.north = north
             }
             .store(in: &disposeBag)
-    }
-    
-    private func startUpdateMotionData() {
-        motionManager.startUpdates { [weak self] motion, error in
-            guard let motion = motion, error == nil else { return }
-
-            let rotation = atan2(motion.gravity.x, motion.gravity.y) - .pi
-            self?.heading = rotation * 180.0 / .pi
-        }
-    }
-    
-    private func updateHeading(_ motion: CMDeviceMotion) {
-        self.heading = atan2(motion.userAcceleration.x, motion.userAcceleration.y) - .pi
-    }
-    
-    deinit {
-        motionManager.stopUpdate()
-        disposeBag.removeAll()
     }
     
     /// Calculates the bearing (angle) between two geographical points using Haversine formula.
@@ -83,42 +62,6 @@ class MainViewModel: ObservableObject {
         let teta = atan2(y, x)
         // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
         let angle = (teta * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
-        return angle
-    }
-
-    /// Calculates the bearing (angle) between two geographical points using an alternative method with logariphmic approach.
-    ///
-    /// The bearing represents the direction from the starting point to the ending point,
-    /// measured in degrees clockwise from true north.
-    ///
-    /// Formula: Δφ = ln( tan( latB / 2 + π / 4 ) / tan( latA / 2 + π / 4) )
-    /// Δlon = abs( lonA - lonB )
-    /// bearing :  θ = atan2( Δlon ,  Δφ
-    ///
-    /// - Parameters:
-    ///   - startPoint: The starting point with latitude and longitude coordinates in radians.
-    ///   - endPoint: The ending point with latitude and longitude coordinates in radians.
-    ///
-    /// - Returns: The bearing angle in degrees, measured clockwise from true north.
-    ///
-    /// - Note: This method uses an alternative approach to calculate bearing based on logarithmic and absolute differences of latitude and longitude.
-    /// - SeeAlso: `logarithmicBearingFormula`
-    ///
-    /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in degrees.
-    ///
-    private func calculateBearingTwo(from startPoint: Point, to endPoint: Point) -> Double {
-        
-        let endLngRad = makeRadians(endPoint.lng)
-        let endLatRad = makeRadians(endPoint.lat)
-        
-        let startLngRad = makeRadians(startPoint.lng)
-        let startLatRad = makeRadians(startPoint.lat)
-        
-        let deltaPhi = log(tan(endLatRad / 2 + .pi / 4) / tan(startLatRad / 2 + .pi / 4))
-        let deltaLon = abs(endLngRad - startLngRad)
-        let bearing = atan2(deltaLon, deltaPhi)
-        // Since atan2 returns values in the range -π ... +π (that is, -180° ... +180°), to normalise the result to a compass bearing (in the range 0° ... 360°, with −ve values transformed into the range 180° ... 360°), convert to degrees and then use (θ+360) % 360, where % is (floating point) modulo
-        let angle = (bearing * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
         return angle
     }
     
