@@ -51,8 +51,14 @@ extension ContentView {
     }
     
     func drawHeadingLabel() -> some View {
-        Text(headingLabel(for: viewModel.north))
-            .font(.system(size: 36, weight: .regular))
+        ZStack {
+            Triangle()
+                .fill(Color.red)
+                .frame(width: 15, height: 15)
+                .offset(y: (maxWidth - 305))
+            Text(headingLabel(for: viewModel.north))
+                .font(.system(size: 36, weight: .regular))
+        }
     }
     
     private func headingLabel(for heading: Double) -> String {
