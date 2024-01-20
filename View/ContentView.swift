@@ -11,7 +11,7 @@ import SwiftData
 
 struct ContentView: View {
     
-    @ObservedObject private var viewModel = MainViewModel()
+    @ObservedObject var viewModel = MainViewModel()
     @State var anglesArray: [Int] = []
     
     @Environment(\.modelContext) private var context
@@ -21,14 +21,14 @@ struct ContentView: View {
         points.first(where: { $0.home == true })
     }
     
+    @State var firstNorth = 0
+    
     var body: some View {
         ZStack {
-            CircleView(
-                north: $viewModel.north, anglesArray: anglesArray
-            )
-            .rotationEffect(Angle(degrees: viewModel.north))
+            drawCompass()
+            drawHeadingLabel()
         }
-        .toolbar(content: {
+        .toolbar() {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
                     ListView()
@@ -36,18 +36,10 @@ struct ContentView: View {
                     Image(systemName: "list.star")
                 }
             }
-        })
+        }
         .onAppear() {
-            if let home = points.first(where: { $0.home }) {
-                anglesArray = points
-                    .filter{ !$0.home }
-                    .map {
-                        Int(viewModel.calculateAdjustedAngle(
-                            pointOne: home,
-                            pointTwo: $0)
-                        )
-                    }
-            }
+            firstNorth = 180 - Int(viewModel.north)
+            initializeAnglesArray()
         }
     }
 }
