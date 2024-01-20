@@ -6,5 +6,22 @@
 //
 
 import Foundation
+import Combine
 
+class DataService {
+    func fetchCityData() -> AnyPublisher<City, Error> {
+        // Assuming your JSON file is named "cityData.json" and is included in the main bundle
+        guard let jsonURL = Bundle.main.url(forResource: "world_cities", withExtension: "json") else {
+            return Fail(error: URLError(.fileDoesNotExist))
+                .eraseToAnyPublisher()
+        }
 
+        return Just(jsonURL)
+            .tryMap { url in
+                let data = try Data(contentsOf: url)
+                return data
+            }
+            .decode(type: City.self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
+}

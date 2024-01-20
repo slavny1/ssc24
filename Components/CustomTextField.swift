@@ -16,7 +16,6 @@ struct CustomTextField: View {
         self.title = title
         self._text = text
     }
-
     var body: some View {
         HStack {
             TextField(title, text: $text)
