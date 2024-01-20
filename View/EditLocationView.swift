@@ -20,41 +20,97 @@ struct EditLocationView: View {
     var point: Point?
     
     var body: some View {
-        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 20) {
+        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 10) {
             HStack {
                 Text("Name:")
-                CustomTextField("Input point's name", text: $name)
+                CustomTextField("Input name for a location", text: $name)
             }
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.primary, lineWidth: 1) // Border
+            )
+
             HStack {
-                Text("Lat:")
-                CustomTextField("Input latitude", text: $lat)
-                    .numericOnly(input: $lat)
+                HStack {
+                    Text("Lat:")
+                    CustomTextField("Latitude", text: $lat)
+                        .numericOnly(input: $lat)
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.primary, lineWidth: 1) // Border
+                )
+                
+                HStack {
+                    Text("Lng:")
+                    CustomTextField("Longtitude", text: $lng)
+                        .numericOnly(input: $lng)
+                }
+                .padding(.vertical, 10)
+                .padding(.horizontal)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.primary, lineWidth: 1) // Border
+                )
             }
+            
             HStack {
-                Text("Lng:")
-                CustomTextField("Input longtitude", text: $lng)
-                    .numericOnly(input: $lat)
-            }
-            Button(action: {
-                home.toggle()
-            }, label: {
-                Text("Set as home")
-            })
-            if let point = point {
-                Button {
-                    self.presentationMode.wrappedValue.dismiss()
-                    context.delete(point)
-                } label: {
-                    Text("Delete")
+                if let point = point, point.home == true {
+                    Button(action: {
+                        home.toggle()
+                    }, label: {
+                        Text("Choose another home")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(.primary)
+                            .cornerRadius(10)
+                            
+                    })
+                } else {
+                    Button(action: {
+                        home.toggle()
+                    }, label: {
+                        HStack {
+                            Image(systemName: "house")
+                            Text("Set as home")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(.primary)
+                        .cornerRadius(10)
+                    })
+                }
+                
+                if let point = point {
+                    Button {
+                        self.presentationMode.wrappedValue.dismiss()
+                        context.delete(point)
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash")
+                            Text("Delete")
+                        }
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                    }
                 }
             }
         }
+        .frame(maxWidth: 390)
         .padding(.horizontal)
         .onAppear() {
             if let point = point {
                 name = point.name
-                lat = String(format: "%0.4f", point.lat)
-                lng = String(format: "%0.4f", point.lng)
+                lat = String(format: "%0.1f", point.lat)
+                lng = String(format: "%0.1f", point.lng)
                 home = point.home
             }
         }
@@ -80,6 +136,7 @@ struct EditLocationView: View {
                 }, label: {
                     Text("Save")
                 })
+                .disabled(name.isEmpty || lat.isEmpty || lng.isEmpty)
             }
         }
     }

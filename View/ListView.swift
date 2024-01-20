@@ -15,7 +15,33 @@ struct ListView: View {
     
     var body: some View {
         List {
-            ForEach (points) { point in
+            Section {
+                if let point = points.first(where: { $0.home == true }) {
+                    NavigationLink {
+                        EditLocationView(point: point)
+                    } label: {
+                        HStack {
+                            Image(systemName: "house")
+                            Text(point.name)
+                            Spacer()
+                            Image(systemName: "pencil")
+                        }
+                    }
+                } else {
+                    NavigationLink {
+                        EditLocationView()
+                    } label: {
+                        HStack {
+                            Image(systemName: "house")
+                            Text("Set up your home location")
+                            Spacer()
+                            Image(systemName: "pencil")
+                        }
+                    }
+                }
+            }
+            
+            ForEach (points.filter({ $0.home == false })) { point in
                 NavigationLink {
                     EditLocationView(point: point)
                 } label: {

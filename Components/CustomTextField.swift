@@ -19,14 +19,13 @@ struct CustomTextField: View {
     var body: some View {
         HStack {
             TextField(title, text: $text)
-                .textFieldStyle(.roundedBorder)
             if !text.isEmpty {
                 Button {
                     self.text = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
-                        .padding(8)
+                        .padding(.horizontal, 8)
                 }
             }
         }
