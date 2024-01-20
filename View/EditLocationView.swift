@@ -31,32 +31,48 @@ struct EditLocationView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.primary, lineWidth: 1) // Border
             )
-
+            
+            
             HStack {
-                HStack {
-                    Text("Lat:")
-                    CustomTextField("Latitude", text: $lat)
-                        .numericOnly(input: $lat)
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.primary, lineWidth: 1) // Border
-                )
-                
-                HStack {
-                    Text("Lng:")
-                    CustomTextField("Longtitude", text: $lng)
-                        .numericOnly(input: $lng)
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.primary, lineWidth: 1) // Border
-                )
+                Text("Lat:")
+                    .foregroundColor(abs(Double(lat) ?? 0) > 90 ? Color.red : Color.primary)
+                CustomTextField("Latitude", text: $lat)
+                    .numericOnly(input: $lat)
+                    .keyboardType(.decimalPad)
+                Button(action: {
+                    toggleSign(value: $lat)
+                }, label: {
+                    Text(Double(lat) ?? 0 >= 0 ? "N" : "S")
+                        .padding(.horizontal)
+                })
             }
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(abs(Double(lat) ?? 0) > 90 ? Color.red : Color.primary, lineWidth: 1) // Border
+            )
+            
+            HStack {
+                Text("Lng:")
+                    .foregroundColor(abs(Double(lng) ?? 0) > 180 ? Color.red : Color.primary)
+                CustomTextField("Longtitude", text: $lng)
+                    .numericOnly(input: $lng)
+                    .keyboardType(.decimalPad)
+                Button(action: {
+                    toggleSign(value: $lng)
+                }, label: {
+                    Text(Double(lng) ?? 0 >= 0 ? "E" : "W")
+                        .padding(.horizontal)
+                })
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(abs(Double(lng) ?? 0) > 180 ? Color.red : Color.primary, lineWidth: 1)
+            )
+            
             
             HStack {
                 if let point = point, point.home == true {
@@ -69,7 +85,7 @@ struct EditLocationView: View {
                             .foregroundColor(.white)
                             .background(.primary)
                             .cornerRadius(10)
-                            
+                        
                     })
                 } else {
                     Button(action: {
@@ -136,8 +152,16 @@ struct EditLocationView: View {
                 }, label: {
                     Text("Save")
                 })
-                .disabled(name.isEmpty || lat.isEmpty || lng.isEmpty)
+                .disabled(name.isEmpty || lat.isEmpty || lng.isEmpty || abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90)
             }
+        }
+    }
+    
+    private func toggleSign(value: Binding<String>) {
+        // Check if the lng/ltd can be converted to a valid number
+        if var currentValue = Double(value.wrappedValue) {
+            currentValue *= -1 // Toggle the sign
+            value.wrappedValue = String(currentValue)
         }
     }
 }

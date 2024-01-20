@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct CustomTextField: View {
-    var title: String
+    
     @Binding var text: String
+    var title: String
 
     init(_ title: String, text: Binding<String>) {
         self.title = title

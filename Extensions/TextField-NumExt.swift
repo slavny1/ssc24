@@ -20,8 +20,23 @@ struct NumericOnly: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onReceive(Just(input)) { newValue in
-                let filtered = newValue.filter { "-0123456789.".contains($0) }
+                let filtered = newValue
+                    .replacingOccurrences(of: ",", with: ".")
+                    .filter { "-0123456789,.".contains($0)
+                    }
                 if filtered != newValue {
+                    self.input = filtered
+                }
+                
+                // Ensure only one dot in the string
+                if filtered.components(separatedBy: ".").count > 2 {
+                    self.input = String(filtered.dropLast())
+                }
+                
+                // Limit total characters to 7
+                if filtered.count > 9 {
+                    self.input = String(filtered.prefix(7))
+                } else if filtered != newValue {
                     self.input = filtered
                 }
             }
