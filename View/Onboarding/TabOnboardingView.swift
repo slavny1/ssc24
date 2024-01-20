@@ -9,12 +9,13 @@ import SwiftUI
 
 struct TabOnboardingView: View {
     @State private var currentTab = 0
+    var completionHandler: () -> Void
     var body: some View {
         VStack {
             TabView(selection: $currentTab,
                     content:  {
                 ForEach(OnboardingData.list) { viewData in
-                    OnboardingView(data: viewData)
+                    OnboardingView(data: viewData, completionHandler: completionHandler)
                         .tag(viewData.id)
                 }
             })
@@ -35,5 +36,5 @@ struct TabOnboardingView: View {
 
 
 #Preview {
-    TabOnboardingView()
+    TabOnboardingView(completionHandler: { false })
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     var data: OnboardingData
+    var completionHandler: () -> Void
     var body: some View {
         VStack {
 
@@ -22,7 +23,7 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
 
             Button {
-//                appState.isOnboarding = true
+                completionHandler()
             } label: {
                 Text("Skip onboarding")
                     .font(.system(size: 16, weight: .regular))
@@ -33,7 +34,7 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView(data: OnboardingData.list.first!)
+    OnboardingView(data: OnboardingData.list.first!, completionHandler: { false })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
 }
