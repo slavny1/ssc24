@@ -1,6 +1,6 @@
 //
 //  SwiftUIView.swift
-//  
+//
 //
 //  Created by Вячеслав Горев on 20/1/2024.
 //
@@ -12,23 +12,27 @@ struct OnboardingView: View {
     var completionHandler: () -> Void
     var body: some View {
         VStack {
-
+            
             Text(data.primaryText)
                 .font(.system(size: 24, weight: .bold))
                 .padding(.bottom, 10)
+                .multilineTextAlignment(.center)
             Text(data.secondaryText)
                 .padding(.bottom, 50)
                 .padding(.horizontal)
                 .font(.system(size: 18, weight: .regular))
                 .multilineTextAlignment(.center)
-
-            Button {
-                completionHandler()
-            } label: {
-                Text("Skip onboarding")
-                    .font(.system(size: 16, weight: .regular))
+            if data.id == 2 {
+                EditLocationView()
             }
-
+            if data.id == 3 {
+                Button {
+                    completionHandler()
+                } label: {
+                    Text("Finish")
+                        .font(.system(size: 16, weight: .regular))
+                }
+            }
         }
     }
 }

@@ -13,8 +13,9 @@ struct OnboardingData: Hashable, Identifiable {
     let secondaryText: String
 
     static let list: [OnboardingData] = [
-        OnboardingData(id: 0, primaryText: "Welcome to Dark Maze", secondaryText: "An immersive game for visually impaired individuals"),
-        OnboardingData(id: 1, primaryText: "Explore complex Mazes", secondaryText: "Engage all your senses beyond vision"),
-        OnboardingData(id: 2, primaryText: "Turn on sounds and haptic", secondaryText: "It's essential features for navigating through the Maze")
+        OnboardingData(id: 0, primaryText: "Hey, I'm Slava!", secondaryText: "I'm excited to introduce an app that's designed to help you feel closer to your friends and family"),
+        OnboardingData(id: 1, primaryText: "Navigate to Friends with Ease", secondaryText: "Inspired by the compass guiding Muslims to Mecca, our app helps you always head in the right direction to those you care about"),
+        OnboardingData(id: 2, primaryText: "Offline Mode for Contest Submission", secondaryText: "Please fill in your home coordinates or choose from a list of locations"),
+        OnboardingData(id: 3, primaryText: "Ready to Navigate!", secondaryText: "Naples is set as your first friend location because I live here :)\nAdd more locations anytime!")
     ]
 }
