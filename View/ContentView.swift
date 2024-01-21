@@ -13,6 +13,7 @@ struct ContentView: View {
     
     @ObservedObject var viewModel = MainViewModel()
     @State var anglesArray: [Int] = []
+    @State var firstNorth = 0
     
     @Environment(\.modelContext) private var context
     @Query(sort: \Point.name, order: .forward) var points: [Point]
@@ -20,8 +21,6 @@ struct ContentView: View {
     var home: Point? {
         points.first(where: { $0.home == true })
     }
-    
-    @State var firstNorth = 0
     
     var body: some View {
         ZStack {

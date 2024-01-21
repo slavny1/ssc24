@@ -26,7 +26,7 @@ struct DirectionLabel: View {
             case 270:
                 labelWithText("E", rotation: 90 - rotation)
             case let d where d % 30 == 0:
-                labelWithText("\(abs(180 - d))", rotation: 360 - Double(d) - rotation, fontSize: 16, fontWeight: .light)
+                labelWithText("\(d >= 180 ? abs(180 - d) : abs(180 + d))", rotation: 360 - Double(d) - rotation, fontSize: 16, fontWeight: .light)
             default:
                 EmptyView()
             }

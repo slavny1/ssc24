@@ -20,41 +20,112 @@ struct EditLocationView: View {
     var point: Point?
     
     var body: some View {
-        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 20) {
+        VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 10) {
+            
             HStack {
                 Text("Name:")
-                CustomTextField("Input point's name", text: $name)
+                CustomTextField("Input name for a location", text: $name)
             }
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.primary, lineWidth: 1) // Border
+            )
+            
             HStack {
                 Text("Lat:")
-                CustomTextField("Input latitude", text: $lat)
+                    .foregroundColor(abs(Double(lat) ?? 0) > 90 ? Color.red : Color.primary)
+                CustomTextField("Latitude", text: $lat)
                     .numericOnly(input: $lat)
+                    .keyboardType(.decimalPad)
+                Button(action: {
+                    toggleSign(value: $lat)
+                }, label: {
+                    Text(Double(lat) ?? 0 >= 0 ? "N" : "S")
+                        .padding(.horizontal)
+                })
             }
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(abs(Double(lat) ?? 0) > 90 ? Color.red : Color.primary, lineWidth: 1) // Border
+            )
+            
             HStack {
                 Text("Lng:")
-                CustomTextField("Input longtitude", text: $lng)
-                    .numericOnly(input: $lat)
+                    .foregroundColor(abs(Double(lng) ?? 0) > 180 ? Color.red : Color.primary)
+                CustomTextField("Longtitude", text: $lng)
+                    .numericOnly(input: $lng)
+                    .keyboardType(.decimalPad)
+                Button(action: {
+                    toggleSign(value: $lng)
+                }, label: {
+                    Text(Double(lng) ?? 0 >= 0 ? "E" : "W")
+                        .padding(.horizontal)
+                })
             }
-            Button(action: {
-                home.toggle()
-            }, label: {
-                Text("Set as home")
-            })
-            if let point = point {
-                Button {
-                    self.presentationMode.wrappedValue.dismiss()
-                    context.delete(point)
-                } label: {
-                    Text("Delete")
+            .padding(.vertical, 10)
+            .padding(.horizontal)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(abs(Double(lng) ?? 0) > 180 ? Color.red : Color.primary, lineWidth: 1)
+            )
+            
+            HStack {
+                if let point = point, point.home == true {
+                    Button(action: {
+                        home.toggle()
+                    }, label: {
+                        Text("Choose another home")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(.primary)
+                            .cornerRadius(10)
+                        
+                    })
+                } else {
+                    Button(action: {
+                        home.toggle()
+                    }, label: {
+                        HStack {
+                            Image(systemName: "house")
+                            Text("Set as home")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(.primary)
+                        .cornerRadius(10)
+                    })
+                }
+                
+                if let point = point {
+                    Button {
+                        self.presentationMode.wrappedValue.dismiss()
+                        context.delete(point)
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash")
+                            Text("Delete")
+                        }
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                    }
                 }
             }
         }
+        .frame(maxWidth: 390)
         .padding(.horizontal)
         .onAppear() {
             if let point = point {
                 name = point.name
-                lat = String(format: "%0.4f", point.lat)
-                lng = String(format: "%0.4f", point.lng)
+                lat = String(format: "%0.1f", point.lat)
+                lng = String(format: "%0.1f", point.lng)
                 home = point.home
             }
         }
@@ -80,7 +151,32 @@ struct EditLocationView: View {
                 }, label: {
                     Text("Save")
                 })
+                .disabled(name.isEmpty || lat.isEmpty || lng.isEmpty || abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90)
             }
         }
+    }
+    
+    private func toggleSign(value: Binding<String>) {
+        // Check if the lng/ltd can be converted to a valid number
+        if var currentValue = Double(value.wrappedValue) {
+            currentValue *= -1 // Toggle the sign
+            value.wrappedValue = String(currentValue)
+        }
+    }
+    
+    private func loadCities() -> [City] {
+        var cities: [City] = []
+        
+        if let fileURL = Bundle.main.url(forResource: "world_cities", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: fileURL)
+                let decoder = JSONDecoder()
+                cities = try decoder.decode([City].self, from: data)
+            } catch {
+                print("Error while reading the file: \(error)")
+            }
+        }
+        
+        return cities
     }
 }

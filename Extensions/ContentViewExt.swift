@@ -51,8 +51,14 @@ extension ContentView {
     }
     
     func drawHeadingLabel() -> some View {
-        Text(headingLabel(for: viewModel.north))
-            .font(.system(size: 36, weight: .regular))
+        ZStack {
+            Triangle()
+                .fill(Color.red)
+                .frame(width: 15, height: 15)
+                .offset(y: (maxWidth - 305))
+            Text(headingLabel(for: 360 - viewModel.north))
+                .font(.system(size: 36, weight: .regular))
+        }
     }
     
     private func headingLabel(for heading: Double) -> String {
@@ -62,19 +68,19 @@ extension ContentView {
         case 337...360, 0..<24:
             return degrees + " N"
         case 24..<69:
-            return degrees + " NW"
+            return degrees + " NE"
         case 69..<114:
-            return degrees + " W"
+            return degrees + " E"
         case 114..<159:
-            return degrees + " SW"
+            return degrees + " SE"
         case 159..<204:
             return degrees + " S"
         case 204..<249:
-            return degrees + " SE"
+            return degrees + " SW"
         case 249..<294:
-            return degrees + " E"
+            return degrees + " W"
         case 294..<337:
-            return degrees + " NE"
+            return degrees + " NW"
         default:
             return degrees
         }

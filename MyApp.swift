@@ -9,11 +9,20 @@ import SwiftUI
 
 @main
 struct MyApp: App {
+    
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                ContentView()
-                    .navigationTitle("Bussola mi")
+            if hasCompletedOnboarding {
+                NavigationStack {
+                    ContentView()
+                        .navigationTitle("Bussola mi")
+                }
+            } else {
+                TabOnboardingView(completionHandler: {
+                    hasCompletedOnboarding = true
+                })
             }
         }
         .modelContainer(for: [Point.self])

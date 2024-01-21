@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreMotion
 import Combine
 
 class MainViewModel: ObservableObject {
@@ -14,7 +13,6 @@ class MainViewModel: ObservableObject {
     @Published var north: Double = 0
     
     private let locationManager = LocationManager()
-    
     private var disposeBag: Set<AnyCancellable> = []
     
     init() {
@@ -68,7 +66,7 @@ class MainViewModel: ObservableObject {
     private func makeRadians(_ coordinate: Double) -> Double {
         return coordinate * .pi / 180
     }
-
+    
     func calculateAdjustedAngle(pointOne: Point, pointTwo: Point) -> Double {
         let bearing = calculateBearing(from: pointOne, to: pointTwo)
         let adjustedAngle = north + bearing
