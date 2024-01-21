@@ -6,17 +6,13 @@
 //
 
 import Foundation
-import CoreMotion
 import Combine
 
 class MainViewModel: ObservableObject {
     
     @Published var north: Double = 0
-    @Published var city: City?
     
     private let locationManager = LocationManager()
-    private let dataManager = DataService()
-    
     private var disposeBag: Set<AnyCancellable> = []
     
     init() {
@@ -25,30 +21,6 @@ class MainViewModel: ObservableObject {
             .sink { [weak self] north in
                 guard let self else { return }
                 self.north = north
-            }
-            .store(in: &disposeBag)
-        
-        fetchData()
-    }
-    
-    private func fetchData() {
-        dataManager
-            .fetchCityData()
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                
-                switch completion {
-                case .finished:
-                    break // Do nothing on success
-                case .failure(let error):
-                    // Handle error
-                    print(error.localizedDescription)
-                }
-            } receiveValue: { [weak self] city in
-                guard let self = self else { return }
-                // Process the city data as needed
-                self.city = city
-                print(city)
             }
             .store(in: &disposeBag)
     }

@@ -21,6 +21,7 @@ struct EditLocationView: View {
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 10) {
+            
             HStack {
                 Text("Name:")
                 CustomTextField("Input name for a location", text: $name)
@@ -31,7 +32,6 @@ struct EditLocationView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.primary, lineWidth: 1) // Border
             )
-            
             
             HStack {
                 Text("Lat:")
@@ -72,7 +72,6 @@ struct EditLocationView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(abs(Double(lng) ?? 0) > 180 ? Color.red : Color.primary, lineWidth: 1)
             )
-            
             
             HStack {
                 if let point = point, point.home == true {
@@ -163,5 +162,21 @@ struct EditLocationView: View {
             currentValue *= -1 // Toggle the sign
             value.wrappedValue = String(currentValue)
         }
+    }
+    
+    private func loadCities() -> [City] {
+        var cities: [City] = []
+        
+        if let fileURL = Bundle.main.url(forResource: "world_cities", withExtension: "json") {
+            do {
+                let data = try Data(contentsOf: fileURL)
+                let decoder = JSONDecoder()
+                cities = try decoder.decode([City].self, from: data)
+            } catch {
+                print("Error while reading the file: \(error)")
+            }
+        }
+        
+        return cities
     }
 }
