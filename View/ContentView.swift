@@ -26,6 +26,7 @@ struct ContentView: View {
         ZStack {
             drawCompass()
             drawHeadingLabel()
+
         }
         .toolbar() {
             ToolbarItem(placement: .topBarTrailing) {
@@ -39,6 +40,20 @@ struct ContentView: View {
         .onAppear() {
             firstNorth = 180 - Int(viewModel.north)
             initializeAnglesArray()
+        }
+        .onChange(of: viewModel.north) { oldValue, newValue in
+//            if abs(oldValue - newValue) > 1 {
+//                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+//            }
+            if Int(newValue) % 30 == 0 {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                print(newValue)
+            }
+            if Int(newValue) == 0 || anglesArray.contains(firstNorth + Int(newValue)) {
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                print(newValue)
+                print(anglesArray)
+            }
         }
     }
 }
