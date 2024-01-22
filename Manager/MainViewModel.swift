@@ -63,10 +63,23 @@ class MainViewModel: ObservableObject {
         return angle
     }
     
+    /// Converts a given angle from degrees to radians. I need this to make calculations of bearing because it's done in radians. Transfer back to degree have done in the func for calculations.
+    /// 
+    /// - Parameter coordinate: A value representing an angle in degrees.
+    /// - Returns: The equivalent angle in radians.
+    /// - Note:Radians are a unit of angular measure in the International System of Units (SI). To convert an angle from degrees to radians, the function multiplies the given angle in degrees by the mathematical constant π (pi) and divides by 180.
+    /// - Warning: Ensure that the input `coordinate` is in the correct range of values for representing angles in degrees (e.g., between 0 and 360 degrees) to obtain meaningful results.
+
+
     private func makeRadians(_ coordinate: Double) -> Double {
         return coordinate * .pi / 180
     }
     
+    ///  The adjusted angle is calculated by adding the bearing from `home` to `point` to the reference direction (north) and then taking the remainder when divided by 360 degrees. I need it to get current bearing of the point from phone's heading.
+    /// - Parameters:
+    ///   - pointOne: `User's home point`
+    ///   - pointTwo: `Point to find bearing for`
+    /// - Returns: Adjusted angle from current phone's `Heading`
     func calculateAdjustedAngle(pointOne: Point, pointTwo: Point) -> Double {
         let bearing = calculateBearing(from: pointOne, to: pointTwo)
         let adjustedAngle = (north + bearing).truncatingRemainder(dividingBy: 360)

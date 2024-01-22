@@ -33,7 +33,7 @@ struct NumericOnly: ViewModifier {
                     self.input = String(filtered.dropLast())
                 }
                 
-                // Limit total characters to 7
+                // Limit total characters to 9
                 if filtered.count > 9 {
                     self.input = String(filtered.prefix(7))
                 } else if filtered != newValue {
