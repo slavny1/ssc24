@@ -53,6 +53,7 @@ struct ContentView: View {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
                 print(newValue)
                 print(anglesArray)
+                print(360 - abs(firstNorth))
             }
         }
     }

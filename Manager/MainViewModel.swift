@@ -69,7 +69,7 @@ class MainViewModel: ObservableObject {
     
     func calculateAdjustedAngle(pointOne: Point, pointTwo: Point) -> Double {
         let bearing = calculateBearing(from: pointOne, to: pointTwo)
-        let adjustedAngle = north + bearing
+        let adjustedAngle = (north + bearing).truncatingRemainder(dividingBy: 360)
         return adjustedAngle
     }
 }

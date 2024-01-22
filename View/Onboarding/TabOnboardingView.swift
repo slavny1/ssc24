@@ -33,7 +33,3 @@ struct TabOnboardingView: View {
         }
     }
 }
-
-#Preview {
-    TabOnboardingView(completionHandler: { false })
-}

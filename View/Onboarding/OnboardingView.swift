@@ -36,9 +36,3 @@ struct OnboardingView: View {
         }
     }
 }
-
-#Preview {
-    OnboardingView(data: OnboardingData.list.first!, completionHandler: { false })
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .ignoresSafeArea()
-}

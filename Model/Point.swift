@@ -16,7 +16,9 @@ final class Point: Identifiable {
     
     var lat: Double
     var lng: Double
-    
+
+    var city: String?
+
     var home: Bool
 
     init(lat: Double, lng: Double, name: String, home: Bool) {
