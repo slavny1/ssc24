@@ -40,7 +40,7 @@ extension ContentView {
 
                     Circle()
                         .foregroundStyle(Color.red)
-                        .frame(width: 4, height: 4)
+                        .frame(width: 5)
                         .offset(y: (maxWidth - 75))
                         .rotationEffect(.degrees(Double(firstNorth) + Double(dot)))
                 }
@@ -65,8 +65,19 @@ extension ContentView {
                 .fill(Color.red)
                 .frame(width: 15, height: 15)
                 .offset(y: (maxWidth - 305))
-            Text(headingLabel(for: 360 - viewModel.north))
-                .font(.system(size: 36, weight: .regular))
+            if anglesArray.contains(currentHeading) {
+                VStack {
+                    Text(headingLabel(for: 360 - viewModel.north))
+                        .font(.system(size: 24, weight: .regular))
+                    Rectangle()
+                        .frame(width: 100, height: 1)
+                    Text(headingLabel(for: 360 - viewModel.north))
+                        .font(.system(size: 24, weight: .regular))
+                }
+            } else {
+                Text(headingLabel(for: 360 - viewModel.north))
+                    .font(.system(size: 36, weight: .regular))
+            }
         }
     }
 

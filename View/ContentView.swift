@@ -14,7 +14,9 @@ struct ContentView: View {
     @ObservedObject var viewModel = MainViewModel()
     @State var anglesArray: [Int] = []
     @State var firstNorth = 0
-    
+// This is a current heading of phone from 0
+    @State var currentHeading = 0
+
     @Environment(\.modelContext) private var context
     @Query(sort: \Point.name, order: .forward) var points: [Point]
     
@@ -48,11 +50,15 @@ struct ContentView: View {
 // Every time view appears I calculate adjusted angle which is an angle for current point from current phone heading (and not from north).
 
             initializeAnglesArray()
+            print(anglesArray)
         }
         .onChange(of: viewModel.north) { oldValue, newValue in
 //            if abs(oldValue - newValue) > 1 {
 //                UIImpactFeedbackGenerator(style: .light).impactOccurred()
 //            }
+
+            currentHeading = (360 - (Int(newValue)) + 180 - firstNorth) % 360
+
             if Int(newValue) % 30 == 0 {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }
@@ -60,9 +66,9 @@ struct ContentView: View {
 // TODO: I needed to implement such complex equation for what contains in anglesArray because in this array bearing angles calculated from current phone Heading and not from an actual bearing for this point. And in order to get this I need to reverse calculations I did before.
 
             if Int(newValue) == 0 ||
-                anglesArray.contains(
-                    (360 - (Int(newValue)) + 180 - firstNorth) % 360) {
+                anglesArray.contains(currentHeading) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+                print(currentHeading)
             }
         }
     }
