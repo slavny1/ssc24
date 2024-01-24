@@ -65,13 +65,14 @@ extension ContentView {
                 .fill(Color.red)
                 .frame(width: 15, height: 15)
                 .offset(y: (maxWidth - 305))
-            if anglesArray.contains(currentHeading) {
+            if let index = anglesArray.firstIndex(of: currentHeading) {
                 VStack {
                     Text(headingLabel(for: 360 - viewModel.north))
                         .font(.system(size: 24, weight: .regular))
                     Rectangle()
                         .frame(width: 100, height: 1)
-                    Text(headingLabel(for: 360 - viewModel.north))
+                    let label = points.filter { $0.home == false } [index].name
+                    Text(label)
                         .font(.system(size: 24, weight: .regular))
                 }
             } else {
