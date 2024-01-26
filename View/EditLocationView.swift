@@ -39,6 +39,7 @@ struct EditLocationView: View {
             }
             .modifier(TextFieldModifier())
             
+            
             HStack {
                 Text("Lat:")
                 CustomTextField("Latitude", text: $lat)
@@ -66,40 +67,6 @@ struct EditLocationView: View {
                 })
             }
             .modifier(TextFieldModifier())
-            
-            HStack {
-                if let point = point, point.home == true {
-                    Button(action: {
-                        home.toggle()
-                    }, label: {
-                        Text("Change home")
-                            .modifier(ButtonLabelModifier(color: .indigo))
-                        
-                    })
-                } else {
-                    Button(action: {
-                        home.toggle()
-                    }, label: {
-                        HStack {
-                            Image(systemName: "house")
-                            Text("Set as home")
-                        }
-                        .modifier(ButtonLabelModifier(color: .indigo))
-                    })
-                }
-                
-                if let point = point {
-                    Button {
-                        deletePoint(point)
-                    } label: {
-                        HStack {
-                            Image(systemName: "trash")
-                            Text("Delete")
-                        }
-                        .modifier(ButtonLabelModifier(color: .red))
-                    }
-                }
-            }
         }
         .frame(maxWidth: 390)
         .padding(.horizontal)
@@ -122,7 +89,19 @@ struct EditLocationView: View {
                 }
                 
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .destructiveAction) {
+                if let point = point, point.home == false {
+                    Button {
+                        deletePoint(point)
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash")
+                                .foregroundColor(.red)
+                        }
+                    }
+                }
+            }
+            ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     savePoint()
                 }, label: {

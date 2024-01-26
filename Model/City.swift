@@ -14,10 +14,10 @@ struct City: Codable {
     var lat: String
     var lng: String
     
-    init(country: String, name: String, lat: String, lng: String) {
-        self.country = country
-        self.name = name
-        self.lat = lat
-        self.lng = lng
+    enum CodingKeys: String, CodingKey {
+        case name
+        case country
+        case lat
+        case lng
     }
 }
