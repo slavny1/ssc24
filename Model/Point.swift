@@ -18,6 +18,7 @@ final class Point: Identifiable {
     var lng: Double
 
     var city: String?
+    var profileImage: Data?
 
     var home: Bool
 
