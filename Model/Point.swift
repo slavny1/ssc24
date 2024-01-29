@@ -22,10 +22,12 @@ final class Point: Identifiable {
 
     var home: Bool
 
-    init(lat: Double, lng: Double, name: String, home: Bool) {
+    init(lat: Double, lng: Double, name: String, home: Bool, city: String? = nil, profileImage: Data? = nil) {
         self.lat = lat
         self.lng = lng
         self.name = name
         self.home = home
+        self.city = city
+        self.profileImage = profileImage
     }
 }

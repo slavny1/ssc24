@@ -6,40 +6,66 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EditLocationView: View {
-    
+
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.modelContext) private var context
-    
+
     @State var name: String = ""
     @State var city: String = ""
     @State var lat: String = ""
     @State var lng: String = ""
-    @State var home: Bool = false
-    
+
+    @State var selectedImage: PhotosPickerItem?
+    @State var selectedImageData: Data?
+
+    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
+
     var point: Point?
-    
+
     private var isSaveDisabled: Bool {
         name.isEmpty || lat.isEmpty || lng.isEmpty || abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90
     }
-    
+
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 10) {
-            
+
+            PhotosPicker(selection: $selectedImage) {
+                if let selectedImageData, let uiImage = UIImage(data: selectedImageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: maxWidth)
+                        .clipShape(Circle())
+                } else {
+                    Text("Choose photo")
+                }
+            }
+            .onChange(of: selectedImage) { oldValue, newValue in
+                Task {
+                    if let data = try? await newValue?.loadTransferable(type: Data.self) {
+                        selectedImageData = data
+                    }
+                }
+            }
+
+            Spacer()
+
             HStack {
                 Text("Name:")
                 CustomTextField("Enter unique name", text: $name)
             }
             .modifier(TextFieldModifier())
-            
+
             HStack {
                 Text("City:")
                 CustomTextField("Enter city", text: $city)
             }
             .modifier(TextFieldModifier())
-            
-            
+
+
             HStack {
                 Text("Lat:")
                 CustomTextField("Latitude", text: $lat)
@@ -53,7 +79,7 @@ struct EditLocationView: View {
                 })
             }
             .modifier(TextFieldModifier())
-            
+
             HStack {
                 Text("Lng:")
                 CustomTextField("Longtitude", text: $lng)
@@ -67,6 +93,7 @@ struct EditLocationView: View {
                 })
             }
             .modifier(TextFieldModifier())
+            Spacer()
         }
         .frame(maxWidth: 390)
         .padding(.horizontal)
@@ -75,7 +102,7 @@ struct EditLocationView: View {
                 name = point.name
                 lat = String(format: "%0.1f", point.lat)
                 lng = String(format: "%0.1f", point.lng)
-                home = point.home
+                selectedImageData = point.profileImage
             }
         }
         .toolbar {
@@ -87,7 +114,7 @@ struct EditLocationView: View {
                     Text("Add new location")
                         .fontWeight(.semibold)
                 }
-                
+
             }
             ToolbarItem(placement: .destructiveAction) {
                 if let point = point, point.home == false {
@@ -111,21 +138,21 @@ struct EditLocationView: View {
             }
         }
     }
-    
+
     private func savePoint() {
         presentationMode.wrappedValue.dismiss()
-        let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: home)
+        let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: false, profileImage: selectedImageData)
         context.insert(newPoint)
         if let point = point {
             context.delete(point)
         }
     }
-    
+
     private func deletePoint(_ point: Point) {
         presentationMode.wrappedValue.dismiss()
         context.delete(point)
     }
-    
+
     private func toggleSign(value: Binding<String>) {
         // Check if the lng/ltd can be converted to a valid number
         if var currentValue = Double(value.wrappedValue) {
@@ -133,10 +160,10 @@ struct EditLocationView: View {
             value.wrappedValue = String(currentValue)
         }
     }
-    
+
     private func loadCities() -> [City] {
         var cities: [City] = []
-        
+
         if let fileURL = Bundle.main.url(forResource: "world_cities", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: fileURL)
@@ -146,7 +173,7 @@ struct EditLocationView: View {
                 print("Error while reading the file: \(error)")
             }
         }
-        
+
         return cities
     }
 }

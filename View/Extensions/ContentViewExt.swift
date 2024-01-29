@@ -49,7 +49,7 @@ extension ContentView {
                     Rectangle()
                         .foregroundStyle(dot == 180 ? Color.red : Color.primary)
                         .frame(width: dot % 30 == 0 ? 2 : 1, height: dot % 30 == 0 ? 15 : 10)
-                        .offset(y: dot % 15 == 0 ? (maxWidth - 60) : (maxWidth - 63))
+                        .offset(y: dot % 30 == 0 ? (maxWidth - 60) : (maxWidth - 63))
                         .rotationEffect(.degrees(Double(dot)))
                 }
             }
@@ -67,13 +67,21 @@ extension ContentView {
                 .offset(y: (maxWidth - 305))
             if let index = anglesArray.firstIndex(of: currentHeading) {
                 VStack {
-                    Text(headingLabel(for: 360 - viewModel.north))
-                        .font(.system(size: 24, weight: .regular))
-                    Rectangle()
-                        .frame(width: 100, height: 1)
-                    let label = points.filter { $0.home == false } [index].name
-                    Text(label)
-                        .font(.system(size: 24, weight: .regular))
+                    if let profileImageData = points.filter({ $0.home == false })[index].profileImage, let uiImage = UIImage(data: profileImageData) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: maxWidth)
+                            .clipShape(Circle())
+                    } else {
+                        Text(headingLabel(for: 360 - viewModel.north))
+                            .font(.system(size: 24, weight: .regular))
+                        Rectangle()
+                            .frame(width: 100, height: 1)
+                        let label = points.filter { $0.home == false } [index].name
+                        Text(label)
+                            .font(.system(size: 24, weight: .regular))
+                    }
                 }
             } else {
                 Text(headingLabel(for: 360 - viewModel.north))
