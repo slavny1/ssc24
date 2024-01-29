@@ -21,6 +21,9 @@ struct EditLocationView: View {
     @State var selectedImage: PhotosPickerItem?
     @State var selectedImageData: Data?
 
+    @State var cities: [City] = []
+    @State var filtredCities: [City] = []
+
     private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
 
     var point: Point?
@@ -62,9 +65,24 @@ struct EditLocationView: View {
             HStack {
                 Text("City:")
                 CustomTextField("Enter city", text: $city)
+                    .onChange(of: city) { oldValue, newValue in
+                        filtredCities = cities.filter { $0.name.lowercased().hasPrefix(city.lowercased()) }
+                    }
             }
             .modifier(TextFieldModifier())
 
+            if city.count > 3 {
+                List(filtredCities, id: \.self) { city in
+                    Button(action: {
+                        self.city = city.name
+                        self.lat = city.lat
+                        self.lng = city.lng
+                    }, label: {
+                        Text(city.name)
+                    })
+                }
+                .listStyle(.inset)
+            }
 
             HStack {
                 Text("Lat:")
@@ -98,8 +116,10 @@ struct EditLocationView: View {
         .frame(maxWidth: 390)
         .padding(.horizontal)
         .onAppear() {
+            cities = loadCities()
             if let point = point {
                 name = point.name
+                city = point.city ?? ""
                 lat = String(format: "%0.1f", point.lat)
                 lng = String(format: "%0.1f", point.lng)
                 selectedImageData = point.profileImage
@@ -141,7 +161,7 @@ struct EditLocationView: View {
 
     private func savePoint() {
         presentationMode.wrappedValue.dismiss()
-        let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: false, profileImage: selectedImageData)
+        let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: false, city: city, profileImage: selectedImageData)
         context.insert(newPoint)
         if let point = point {
             context.delete(point)
@@ -164,16 +184,20 @@ struct EditLocationView: View {
     private func loadCities() -> [City] {
         var cities: [City] = []
 
-        if let fileURL = Bundle.main.url(forResource: "world_cities", withExtension: "json") {
+        if let fileURL = Bundle.module.url(forResource: "world_cities", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: fileURL)
                 let decoder = JSONDecoder()
                 cities = try decoder.decode([City].self, from: data)
+                print("Data decoded")
+                print(cities[0])
             } catch {
                 print("Error while reading the file: \(error)")
             }
+        } else {
+            print("world_cities.json file not found in the main bundle.")
         }
-
+        print("Number of cities: \(cities.count)")
         return cities
     }
 }
