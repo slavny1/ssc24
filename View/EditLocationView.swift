@@ -34,6 +34,10 @@ struct EditLocationView: View {
         name.isEmpty || lat.isEmpty || lng.isEmpty || abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90
     }
 
+    private var isValidCoordinates: Bool {
+        abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90
+    }
+
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 10) {
 
@@ -85,7 +89,7 @@ struct EditLocationView: View {
             }
             .modifier(TextFieldModifier())
 
-            if city.count > 3 && (lat.isEmpty && lng.isEmpty) {
+            if city.count > 3 && (lat.isEmpty || lng.isEmpty) {
                 List(filtredCities, id: \.self) { city in
                     Button(action: {
                         self.city = city.name
@@ -134,6 +138,12 @@ struct EditLocationView: View {
                     })
                 }
                 .modifier(TextFieldModifier())
+
+                if isValidCoordinates {
+                    Text("-- Enter valid coordinates --")
+                        .font(.system(size: 14, weight: .regular, design: .default))
+                        .foregroundStyle(.red)
+                }
             }
 
             Spacer()
