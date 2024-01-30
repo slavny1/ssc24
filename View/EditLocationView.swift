@@ -21,6 +21,8 @@ struct EditLocationView: View {
     @State var selectedImage: PhotosPickerItem?
     @State var selectedImageData: Data?
 
+    @State var isCoordinateField = false
+
     @State var cities: [City] = []
     @State var filtredCities: [City] = []
 
@@ -40,12 +42,22 @@ struct EditLocationView: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: maxWidth)
                         .clipShape(Circle())
+                        .frame(width: maxWidth)
                 } else {
-                    Text("Choose photo")
+                    VStack {
+                        Image("\(Int.random(in: 1...4))")
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(Circle())
+                            .frame(width: maxWidth)
+                        Text("Change photo")
+                            .font(.system(size: 14, weight: .regular, design: .default))
+                    }
                 }
             }
+            .padding(.top, 50)
+            .padding(.bottom, 50)
             .onChange(of: selectedImage) { oldValue, newValue in
                 Task {
                     if let data = try? await newValue?.loadTransferable(type: Data.self) {
@@ -53,8 +65,6 @@ struct EditLocationView: View {
                     }
                 }
             }
-
-            Spacer()
 
             HStack {
                 Text("Name:")
@@ -67,11 +77,15 @@ struct EditLocationView: View {
                 CustomTextField("Enter city", text: $city)
                     .onChange(of: city) { oldValue, newValue in
                         filtredCities = cities.filter { $0.name.lowercased().hasPrefix(city.lowercased()) }
+                        if !oldValue.isEmpty && newValue.isEmpty {
+                            lat = ""
+                            lng = ""
+                        }
                     }
             }
             .modifier(TextFieldModifier())
 
-            if city.count > 3 {
+            if city.count > 3 && (lat.isEmpty && lng.isEmpty) {
                 List(filtredCities, id: \.self) { city in
                     Button(action: {
                         self.city = city.name
@@ -82,35 +96,46 @@ struct EditLocationView: View {
                     })
                 }
                 .listStyle(.inset)
+                .frame(maxHeight: 150)
             }
 
-            HStack {
-                Text("Lat:")
-                CustomTextField("Latitude", text: $lat)
-                    .numericOnly(input: $lat)
-                    .keyboardType(.decimalPad)
-                Button(action: {
-                    toggleSign(value: $lat)
-                }, label: {
-                    Text(Double(lat) ?? 0 >= 0 ? "N" : "S")
-                        .padding(.horizontal)
-                })
-            }
-            .modifier(TextFieldModifier())
+            Button(action: {
+                isCoordinateField.toggle()
+            }, label: {
+                Text("-- Or enter precise coordinates below --")
+                    .font(.system(size: 14, weight: .regular, design: .default))
+            })
 
-            HStack {
-                Text("Lng:")
-                CustomTextField("Longtitude", text: $lng)
-                    .numericOnly(input: $lng)
-                    .keyboardType(.decimalPad)
-                Button(action: {
-                    toggleSign(value: $lng)
-                }, label: {
-                    Text(Double(lng) ?? 0 >= 0 ? "E" : "W")
-                        .padding(.horizontal)
-                })
+            if isCoordinateField {
+                HStack {
+                    Text("Lat:")
+                    CustomTextField("Latitude", text: $lat)
+                        .numericOnly(input: $lat)
+                        .keyboardType(.decimalPad)
+                    Button(action: {
+                        toggleSign(value: $lat)
+                    }, label: {
+                        Text(Double(lat) ?? 0 >= 0 ? "N" : "S")
+                            .padding(.horizontal)
+                    })
+                }
+                .modifier(TextFieldModifier())
+
+                HStack {
+                    Text("Lng:")
+                    CustomTextField("Longtitude", text: $lng)
+                        .numericOnly(input: $lng)
+                        .keyboardType(.decimalPad)
+                    Button(action: {
+                        toggleSign(value: $lng)
+                    }, label: {
+                        Text(Double(lng) ?? 0 >= 0 ? "E" : "W")
+                            .padding(.horizontal)
+                    })
+                }
+                .modifier(TextFieldModifier())
             }
-            .modifier(TextFieldModifier())
+
             Spacer()
         }
         .frame(maxWidth: 390)
