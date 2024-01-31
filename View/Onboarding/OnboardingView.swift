@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     let data: OnboardingData
-    let completionHandler: () -> Void
+    @Binding var isHomeAdded: Bool
     private var maxWidth: CGFloat { min(UIScreen.main.bounds.width, 380) }
     var body: some View {
         VStack {
@@ -28,16 +28,8 @@ struct OnboardingView: View {
                 .font(.system(size: 18, weight: .regular))
                 .multilineTextAlignment(.center)
             if data.id == 2 {
-                OnboardingLocationView()
+                OnboardingLocationView(isHomeAdded: $isHomeAdded)
                     .padding(.bottom, 50)
-            }
-            if data.id == 3 {
-                Button {
-                    completionHandler()
-                } label: {
-                    Text("Finish")
-                        .font(.system(size: 16, weight: .regular))
-                }
             }
         }
     }

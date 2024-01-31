@@ -17,6 +17,7 @@ struct OnboardingLocationView: View {
     @State var lng: String = ""
 
     @State var isCoordinateField = false
+    @Binding var isHomeAdded: Bool
 
     @State var cities: [City] = []
     @State var filtredCities: [City] = []
@@ -56,7 +57,7 @@ struct OnboardingLocationView: View {
                     })
                 }
                 .listStyle(.inset)
-                .frame(maxHeight: 150)
+                .frame(minHeight: 150)
             }
 
             Button(action: {
@@ -101,6 +102,19 @@ struct OnboardingLocationView: View {
                         .foregroundStyle(.red)
                 }
             }
+
+            Button(action: {
+                savePoint()
+                isHomeAdded.toggle()
+            }, label: {
+                Text("Save")
+                    .padding()
+                    .foregroundColor(.white)
+            })
+            .disabled(isSaveDisabled)
+            .background(Color.accentColor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding()
         }
         .onAppear() {
             cities = loadCities()
@@ -108,7 +122,7 @@ struct OnboardingLocationView: View {
     }
 
     private func savePoint() {
-        let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: false, city: city, profileImage: nil)
+        let newPoint = Point(lat: Double(lat) ?? 0, lng: Double(lng) ?? 0, name: name, home: true, city: city, profileImage: nil)
         context.insert(newPoint)
     }
 
@@ -139,8 +153,4 @@ struct OnboardingLocationView: View {
             value.wrappedValue = String(currentValue)
         }
     }
-}
-
-#Preview {
-    OnboardingLocationView()
 }

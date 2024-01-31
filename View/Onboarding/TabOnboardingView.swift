@@ -9,27 +9,37 @@ import SwiftUI
 
 struct TabOnboardingView: View {
     @State private var currentTab = 0
+    @State var isHomeAdded = false
     var completionHandler: () -> Void
     var body: some View {
-        VStack {
-            TabView(selection: $currentTab,
-                    content:  {
-                ForEach(OnboardingData.list) { viewData in
-                    OnboardingView(data: viewData, completionHandler: completionHandler)
-                        .tag(viewData.id)
-                }
+        if isHomeAdded {
+            OnboardingView(data: OnboardingData.list[3], isHomeAdded: $isHomeAdded)
+            Button(action: {
+                completionHandler()
+            }, label: {
+                Text("Finish")
             })
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            
-            Spacer()
+        } else {
+            VStack {
+                TabView(selection: $currentTab,
+                        content:  {
+                    ForEach(OnboardingData.list.dropLast()) { viewData in
+                        OnboardingView(data: viewData, isHomeAdded: $isHomeAdded)
+                            .tag(viewData.id)
+                    }
+                })
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
 
-            HStack(spacing: 15) {
-                ForEach(OnboardingData.list.indices, id: \.self) { index in
-                    Capsule()
-                        .frame(width: currentTab == index ? 20 : 7, height: 7)
+                Spacer()
+
+                HStack(spacing: 15) {
+                    ForEach(OnboardingData.list.dropLast().indices, id: \.self) { index in
+                        Capsule()
+                            .frame(width: currentTab == index ? 20 : 7, height: 7)
+                    }
                 }
+                .padding(.bottom, 50)
             }
-            .padding(.bottom, 50)
         }
     }
 }
