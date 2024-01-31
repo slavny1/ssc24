@@ -8,22 +8,28 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    var data: OnboardingData
-    var completionHandler: () -> Void
+    let data: OnboardingData
+    let completionHandler: () -> Void
+    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width, 380) }
     var body: some View {
         VStack {
-            
+            Image(data.image)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: maxWidth, maxHeight: maxWidth)
             Text(data.primaryText)
                 .font(.system(size: 24, weight: .bold))
                 .padding(.bottom, 10)
+                .padding(.horizontal)
                 .multilineTextAlignment(.center)
             Text(data.secondaryText)
-                .padding(.bottom, 50)
+                .padding(.bottom, 20)
                 .padding(.horizontal)
                 .font(.system(size: 18, weight: .regular))
                 .multilineTextAlignment(.center)
             if data.id == 2 {
-                EditLocationView()
+                OnboardingLocationView()
+                    .padding(.bottom, 50)
             }
             if data.id == 3 {
                 Button {

@@ -28,6 +28,10 @@ struct ContentView: View {
         ZStack {
             drawCompass()
             drawHeadingLabel()
+//            Image(systemName: "arrowshape.down.circle.fill")
+//                .resizable()
+//                .frame(width: 150, height: 150)
+//                .rotationEffect(.degrees(viewModel.north))
 
         }
         .toolbar() {
@@ -45,7 +49,9 @@ struct ContentView: View {
 
 // TODO: Note, that in order to avoid it in the future I might implement offset for compass elements with + sign (N and S) vice versa. Think about it.
 
-            firstNorth = 180 - Int(viewModel.north)
+            firstNorth = Int(180 - round(viewModel.north))
+            print(viewModel.north)
+            print(firstNorth)
 
 // Every time view appears I calculate adjusted angle which is an angle for current point from current phone heading (and not from north).
 
@@ -53,11 +59,8 @@ struct ContentView: View {
             print(anglesArray)
         }
         .onChange(of: viewModel.north) { oldValue, newValue in
-//            if abs(oldValue - newValue) > 1 {
-//                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-//            }
 
-            currentHeading = (360 - (Int(newValue)) + 180 - firstNorth) % 360
+            currentHeading = (360 - Int(round(newValue)) + 180 - firstNorth) % 360
 
             if Int(newValue) % 30 == 0 {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -68,7 +71,6 @@ struct ContentView: View {
             if Int(newValue) == 0 ||
                 anglesArray.contains(currentHeading) {
                 UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-                print(currentHeading)
             }
         }
     }

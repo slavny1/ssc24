@@ -18,10 +18,10 @@ extension ContentView {
             anglesArray = points
                 .filter{ !$0.home }
                 .map {
-                    Int(viewModel.calculateAdjustedAngle(
+                    Int(round(viewModel.calculateAdjustedAngle(
                         pointOne: home,
                         pointTwo: $0)
-                    )
+                    ))
                 }
         }
     }
@@ -54,7 +54,7 @@ extension ContentView {
                 }
             }
         }
-        .rotationEffect(Angle(degrees: viewModel.north))
+        .rotationEffect(.degrees(viewModel.north))
     }
 
     // Small little triangle to point phone's Heading
