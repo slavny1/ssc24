@@ -58,7 +58,6 @@ extension ContentView {
     }
 
     // Small little triangle to point phone's Heading
-
     func drawHeadingLabel() -> some View {
         ZStack {
             Triangle()

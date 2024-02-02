@@ -17,7 +17,6 @@ struct MyApp: App {
             if hasCompletedOnboarding {
                 NavigationStack {
                     ContentView()
-                        .navigationTitle("Bussola mi")
                 }
             } else {
                 TabOnboardingView(completionHandler: {
