@@ -10,7 +10,7 @@ import Combine
 
 class DataService {
     func fetchCityData() -> AnyPublisher<City, Error> {
-        // Assuming your JSON file is named "cityData.json" and is included in the main bundle
+
         guard let jsonURL = Bundle.main.url(forResource: "world_cities", withExtension: "json") else {
             return Fail(error: URLError(.fileDoesNotExist))
                 .eraseToAnyPublisher()

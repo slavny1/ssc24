@@ -80,8 +80,9 @@ struct EditLocationView: View {
                 Text("City:")
                 CustomTextField("Enter city", text: $city)
                     .onChange(of: city) { oldValue, newValue in
-                        filtredCities = cities.filter { $0.name.lowercased().hasPrefix(city.lowercased()) }
-                        if !oldValue.isEmpty && newValue.isEmpty {
+                        filtredCities = cities.filter { $0.name.lowercased().trimmingCharacters(in: .whitespaces).hasPrefix(city.lowercased().trimmingCharacters(in: .whitespaces))
+                        }
+                        if oldValue.count > newValue.count {
                             lat = ""
                             lng = ""
                         }
@@ -89,14 +90,14 @@ struct EditLocationView: View {
             }
             .modifier(TextFieldModifier())
 
-            if city.count > 3 && (lat.isEmpty || lng.isEmpty) {
+            if city.count > 2 && (lat.isEmpty || lng.isEmpty) {
                 List(filtredCities, id: \.self) { city in
                     Button(action: {
                         self.city = city.name
                         self.lat = city.lat
                         self.lng = city.lng
                     }, label: {
-                        Text(city.name)
+                        Text("\(city.name) (\(city.country))")
                     })
                 }
                 .listStyle(.inset)
