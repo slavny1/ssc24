@@ -16,6 +16,7 @@ struct TabOnboardingView: View {
             OnboardingView(data: OnboardingData.list[3], isHomeAdded: $isHomeAdded)
             Button(action: {
                 completionHandler()
+                
             }, label: {
                 Text("Finish")
                     .padding(.vertical, 10)
