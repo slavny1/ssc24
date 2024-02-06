@@ -9,8 +9,6 @@ import SwiftUI
 
 extension ContentView {
 
-//    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
-
     /// Initializes the `anglesArray` property based on the angles between the home point and other non-home points. The function calculates the adjusted angles between the home point and each non-home point in the `points` array and populates the `anglesArray` with the resulting angles.
     /// Warning: The function relies on the existence of a home point in the `points` array to perform calculations. Ensure that the `points` array contains a home point, and the `viewModel` is appropriately configured.
     func initializeAnglesArray() {
@@ -26,7 +24,7 @@ extension ContentView {
         }
     }
 
-    func drawCompass() -> some View {
+    var compass: some View {
         ZStack {
             ForEach(0..<360) { dot in
 
@@ -57,8 +55,8 @@ extension ContentView {
         .rotationEffect(.degrees(viewModel.north))
     }
 
-    // Small little triangle to point phone's Heading
-    func drawHeadingLabel() -> some View {
+    // Small little triangle and label to point phone's Heading
+    var label: some View {
         ZStack {
             Triangle()
                 .fill(Color.red)

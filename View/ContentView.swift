@@ -48,8 +48,8 @@ struct ContentView: View {
                 }
                 Spacer()
             }
-            drawCompass()
-            drawHeadingLabel()
+            compass
+            label
         }
         .navigationTitle(point?.name ?? "Heading")
         .toolbar() {
