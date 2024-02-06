@@ -9,7 +9,7 @@ import SwiftUI
 
 extension ContentView {
 
-    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
+//    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
 
     /// Initializes the `anglesArray` property based on the angles between the home point and other non-home points. The function calculates the adjusted angles between the home point and each non-home point in the `points` array and populates the `anglesArray` with the resulting angles.
     /// Warning: The function relies on the existence of a home point in the `points` array to perform calculations. Ensure that the `points` array contains a home point, and the `viewModel` is appropriately configured.

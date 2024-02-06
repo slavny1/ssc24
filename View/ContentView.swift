@@ -25,6 +25,8 @@ struct ContentView: View {
         points.first(where: { $0.home == true })
     }
 
+    @State var distance: Double = 0
+
     @State var point: Point? = nil
 
     var body: some View {
@@ -33,9 +35,15 @@ struct ContentView: View {
                 if let point = point {
                     HStack {
                         Text(home?.city ?? "Home")
+                            .font(.system(size: 20, weight: .black))
+                        Spacer()
+                        Text(String(format: "%.1f", distance) + " km")
+                            .font(.system(size: 14, weight: .regular))
                         Spacer()
                         Text(point.city ?? "City")
+                            .font(.system(size: 20, weight: .black))
                     }
+                    .padding(.top)
                     .padding()
                 }
                 Spacer()
@@ -72,8 +80,10 @@ struct ContentView: View {
 
             currentHeading = (360 - Int(round(newValue)) + 180 - firstNorth) % 360
 
+            // TODO: remove force unwraping optionals
             if let index = anglesArray.firstIndex(of: currentHeading) {
                 point = points.filter({ $0.home == false })[index]
+                distance = viewModel.calculateDistance(from: home!, to: point!)
             } else {
                 point = nil
             }

@@ -22,7 +22,7 @@ struct OnboardingLocationView: View {
     @State var cities: [City] = []
     @State var filtredCities: [City] = []
 
-    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
+//    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
 
     private var isSaveDisabled: Bool {
         name.isEmpty || lat.isEmpty || lng.isEmpty || abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90
@@ -45,6 +45,8 @@ struct OnboardingLocationView: View {
                     }
             }
             .modifier(TextFieldModifier())
+            .padding()
+            .frame(maxWidth: 2 * maxWidth)
 
             if city.count > 3 && (lat.isEmpty || lng.isEmpty) {
                 List(filtredCities, id: \.self) { city in
@@ -108,11 +110,12 @@ struct OnboardingLocationView: View {
                 isHomeAdded.toggle()
             }, label: {
                 Text("Save")
-                    .padding()
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 30)
                     .foregroundColor(.white)
             })
             .disabled(isSaveDisabled)
-            .background(Color.accentColor)
+            .background(isSaveDisabled ? .gray : Color.accentColor)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding()
         }

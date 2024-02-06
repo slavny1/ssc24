@@ -9,12 +9,12 @@ import Foundation
 import Combine
 
 class MainViewModel: ObservableObject {
-    
+
     @Published var north: Double = 0
-    
+
     private let locationManager = LocationManager()
     private var disposeBag: Set<AnyCancellable> = []
-    
+
     init() {
         locationManager
             .heading
@@ -24,7 +24,36 @@ class MainViewModel: ObservableObject {
             }
             .store(in: &disposeBag)
     }
-    
+
+    /// Calculates the great-circle distance between two points on the Earth's surface using the Haversine formula.
+    ///
+    /// - Parameters:
+    ///   - startPoint: The starting point defined by its latitude and longitude.
+    ///   - endPoint: The ending point defined by its latitude and longitude.
+    /// - Returns: The distance between the two points in meters.
+    func calculateDistance(from startPoint: Point, to endPoint: Point) -> Double {
+
+        let R = 6371e3 // Earth's radius in meters
+
+        let endLngRad = makeRadians(endPoint.lng)
+        let endLatRad = makeRadians(endPoint.lat)
+
+        let startLngRad = makeRadians(startPoint.lng)
+        let startLatRad = makeRadians(startPoint.lat)
+
+        let deltaLng = endLngRad - startLngRad
+        let deltaLat = endLatRad - startLatRad
+
+        let a = sin(deltaLat/2) * sin(deltaLat/2) +
+        cos(startLatRad) * cos(endLatRad) *
+        sin(deltaLng/2) * sin(deltaLng/2)
+        let c = 2 * atan2(sqrt(a), sqrt(1-a))
+
+        let distance = R * c / 1000 // Distance in kilometers
+        print(distance)
+        return distance
+    }
+
     /// Calculates the bearing (angle) between two geographical points using Haversine formula.
     ///
     /// The bearing represents the direction from the starting point to the ending point,
@@ -48,13 +77,13 @@ class MainViewModel: ObservableObject {
     /// - Warning: Ensure that the `latitude` and `longitude` properties of the `Point` struct are represented in degrees.
     ///
     private func calculateBearing(from startPoint: Point, to endPoint: Point) -> Double {
-        
+
         let endLngRad = makeRadians(endPoint.lng)
         let endLatRad = makeRadians(endPoint.lat)
-        
+
         let startLngRad = makeRadians(startPoint.lng)
         let startLatRad = makeRadians(startPoint.lat)
-        
+
         let y = sin(endLngRad - startLngRad) * cos(endLatRad)
         let x = cos(startLatRad) * sin(endLatRad) - sin(startLatRad) * cos(endLatRad) * cos(endLngRad - startLngRad)
         let teta = atan2(y, x)
@@ -62,9 +91,9 @@ class MainViewModel: ObservableObject {
         let angle = (teta * 180 / .pi + 360).truncatingRemainder(dividingBy: 360)
         return angle
     }
-    
+
     /// Converts a given angle from degrees to radians. I need this to make calculations of bearing because it's done in radians. Transfer back to degree have done in the func for calculations.
-    /// 
+    ///
     /// - Parameter coordinate: A value representing an angle in degrees.
     /// - Returns: The equivalent angle in radians.
     /// - Note:Radians are a unit of angular measure in the International System of Units (SI). To convert an angle from degrees to radians, the function multiplies the given angle in degrees by the mathematical constant π (pi) and divides by 180.
@@ -74,7 +103,7 @@ class MainViewModel: ObservableObject {
     private func makeRadians(_ coordinate: Double) -> Double {
         return coordinate * .pi / 180
     }
-    
+
     ///  The adjusted angle is calculated by adding the bearing from `home` to `point` to the reference direction (north) and then taking the remainder when divided by 360 degrees. I need it to get current bearing of the point from phone's heading.
     /// - Parameters:
     ///   - pointOne: `User's home point`

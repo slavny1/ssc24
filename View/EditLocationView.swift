@@ -26,7 +26,7 @@ struct EditLocationView: View {
     @State var cities: [City] = []
     @State var filtredCities: [City] = []
 
-    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
+//    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
 
     var point: Point?
 

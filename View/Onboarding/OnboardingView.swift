@@ -10,13 +10,13 @@ import SwiftUI
 struct OnboardingView: View {
     let data: OnboardingData
     @Binding var isHomeAdded: Bool
-    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width, 380) }
+//    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width, 380) }
     var body: some View {
         VStack {
             Image(data.image)
                 .resizable()
                 .scaledToFit()
-                .frame(maxWidth: maxWidth, maxHeight: maxWidth)
+                .frame(maxWidth: maxWidth * 2, maxHeight: maxWidth * 2)
             Text(data.primaryText)
                 .font(.system(size: 24, weight: .bold))
                 .padding(.bottom, 10)
@@ -32,5 +32,6 @@ struct OnboardingView: View {
                     .padding(.bottom, 50)
             }
         }
+        .frame(maxWidth: maxWidth * 2)
     }
 }
