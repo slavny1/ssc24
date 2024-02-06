@@ -18,7 +18,13 @@ struct TabOnboardingView: View {
                 completionHandler()
             }, label: {
                 Text("Finish")
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 30)
+                    .foregroundColor(.white)
             })
+            .background(Color.accentColor)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding()
         } else {
             VStack {
                 TabView(selection: $currentTab,
