@@ -21,8 +21,6 @@ struct OnboardingLocationView: View {
     @State var cities: [City] = []
     @State var filtredCities: [City] = []
 
-    //    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width / 2, 195) }
-
     private var isSaveDisabled: Bool {
         lat.isEmpty || lng.isEmpty || abs(Double(lng) ?? 0) > 180 || abs(Double(lat) ?? 0) > 90
     }

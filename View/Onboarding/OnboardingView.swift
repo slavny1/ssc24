@@ -10,7 +10,6 @@ import SwiftUI
 struct OnboardingView: View {
     let data: OnboardingData
     @Binding var isHomeAdded: Bool
-//    private var maxWidth: CGFloat { min(UIScreen.main.bounds.width, 380) }
     var body: some View {
         VStack {
             Image(data.image)
