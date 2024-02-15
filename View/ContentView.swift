@@ -26,8 +26,8 @@ struct ContentView: View {
     }
 
     @State var distance: Double = 0
-
     @State var point: Point? = nil
+    @State var isHoldOnTap = false
 
     var body: some View {
         ZStack {
@@ -61,6 +61,12 @@ struct ContentView: View {
                 }
             }
         }
+        .onTapGesture {
+            if anglesArray.contains(currentHeading) {
+                isHoldOnTap.toggle()
+            }
+            print("tap \(isHoldOnTap)")
+        }
         .onAppear() {
 
             // I needed to adjust initial North direction to 180 degrees because in UI angle counted from bottom and for Bearing calculation from top. So, I use 180 with +/- sign in order to adjust UI position of a labels and dots.
@@ -78,7 +84,9 @@ struct ContentView: View {
         }
         .onChange(of: viewModel.north) { oldValue, newValue in
 
-            currentHeading = (360 - Int(round(newValue)) + 180 - firstNorth) % 360
+            if !isHoldOnTap {
+                currentHeading = (360 - Int(round(newValue)) + 180 - firstNorth) % 360
+            }
 
             // TODO: remove force unwraping optionals
             if let index = anglesArray.firstIndex(of: currentHeading) {
