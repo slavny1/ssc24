@@ -106,7 +106,7 @@ struct OnboardingLocationView: View {
                 Task {
                     if let image = UIImage(named: "slava") {
                         if let imageData = image.pngData() {
-                            savePoint(point: Point(lat: 40.8518, lng: 14.2681, name: "Your dear friend", home: false, city: "Napoli", profileImage: imageData))
+                            savePoint(point: Point(lat: 40.8518, lng: 14.2681, name: "Hi, it's Slava!", home: false, city: "Napoli", profileImage: imageData))
                             print("data saved")
                         }
                     }
