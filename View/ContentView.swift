@@ -28,30 +28,42 @@ struct ContentView: View {
     @State var distance: Double = 0
     @State var point: Point? = nil
     @State var isHoldOnTap = false
+    @State var isModal = false
 
     var body: some View {
-        ZStack {
-            VStack {
-                if let point = point {
-                    HStack {
-                        Text(home?.city ?? "Home")
-                            .font(.system(size: 20, weight: .black))
-                        Spacer()
-                        Text(String(format: "%.1f", distance) + " km")
-                            .font(.system(size: 14, weight: .regular))
-                        Spacer()
-                        Text(point.city ?? "City")
-                            .font(.system(size: 20, weight: .black))
+        VStack {
+            ZStack {
+                VStack {
+                    if let point = point {
+                        HStack {
+                            Text(home?.city ?? "Home")
+                                .font(.system(size: 20, weight: .black))
+                            Spacer()
+                            Text(String(format: "%.1f", distance) + " km")
+                                .font(.system(size: 14, weight: .regular))
+                            Spacer()
+                            Text(point.city ?? "City")
+                                .font(.system(size: 20, weight: .black))
+                        }
+                        .padding(.top)
+                        .padding()
                     }
-                    .padding(.top)
-                    .padding()
+                    Spacer()
                 }
-                Spacer()
+                compass
+                label
             }
-            compass
-            label
+            Button {
+                isModal.toggle()
+            } label: {
+                Text("Does heading wrong?")
+            }
+
         }
         .navigationTitle(point?.name ?? "Strings")
+        .sheet(isPresented: $isModal, content: {
+            ModalView(isModal: $isModal)
+        })
         .toolbar() {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
