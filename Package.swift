@@ -8,17 +8,17 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "Mi ami",
+    name: "Strings",
     platforms: [
         .iOS("17.0")
     ],
     products: [
         .iOSApplication(
-            name: "Mi ami",
+            name: "Strings",
             targets: ["AppModule"],
             bundleIdentifier: "slavny1.SwiftStudentChallenge",
             teamIdentifier: "3523U23689",
-            displayVersion: "1.1",
+            displayVersion: "1.2",
             bundleVersion: "1",
             appIcon: .placeholder(icon: .location),
             accentColor: .asset("AccentColor"),

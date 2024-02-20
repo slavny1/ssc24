@@ -51,7 +51,7 @@ struct ContentView: View {
             compass
             label
         }
-        .navigationTitle(point?.name ?? "Heading")
+        .navigationTitle(point?.name ?? "Strings")
         .toolbar() {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
